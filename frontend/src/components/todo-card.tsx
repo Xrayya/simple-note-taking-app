@@ -25,7 +25,7 @@ export function TodoCard() {
       </CardContent>
       <CardFooter className="grid gap-2 grid-cols-2">
         <Button variant="outline" size="sm" className="w-full">
-          Action
+          Archive
         </Button>
         <Button variant="outline" size="sm" className="w-full">
           Delete
