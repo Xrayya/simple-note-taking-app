@@ -6,6 +6,7 @@ import { Textarea } from "./ui/textarea";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "./ui/button";
 import type { ComponentProps } from "react";
+import { LoaderCircle } from "lucide-react";
 
 type Props = ComponentProps<"div"> & {
   onCancel: () => void;
@@ -35,57 +36,75 @@ export function AddNoteForm({ onCancel, ...restProps }: Props) {
             e.preventDefault();
             e.stopPropagation();
             form.handleSubmit();
+            form.reset();
           }}
         >
-          <FieldSet className="w-full my-4">
-            <FieldGroup>
-              <form.Field
-                name="title"
-                children={(field) => (
-                  <Field>
-                    <Input
-                      type="text"
-                      name={field.name}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => {
-                        field.handleChange(e.target.value);
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+            children={([canSubmit, isSubmitting]) => (
+              <FieldSet className="w-full my-4">
+                <FieldGroup>
+                  <form.Field
+                    name="title"
+                    children={(field) => (
+                      <Field>
+                        <Input
+                          type="text"
+                          name={field.name}
+                          value={field.state.value}
+                          disabled={isSubmitting}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => {
+                            field.handleChange(e.target.value);
+                          }}
+                          placeholder="Note Title"
+                        />
+                      </Field>
+                    )}
+                  />
+                  <form.Field
+                    name="body"
+                    children={(field) => (
+                      <Field>
+                        <Textarea
+                          name={field.name}
+                          value={field.state.value}
+                          disabled={isSubmitting}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => {
+                            field.handleChange(e.target.value);
+                          }}
+                          placeholder="Your feedback helps us improve..."
+                          rows={4}
+                        />
+                      </Field>
+                    )}
+                  />
+                  <Field orientation="horizontal">
+                    <Button type="submit" disabled={!canSubmit}>
+                      {isSubmitting ? (
+                        <LoaderCircle className="animate-spin" />
+                      ) : null}
+                      Add Note
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      type="reset"
+                      disabled={isSubmitting}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        form.reset();
+                        onCancel();
                       }}
-                      placeholder="Note Title"
-                    />
+                    >
+                      Cancel
+                    </Button>
                   </Field>
-                )}
-              />
-              <form.Field
-                name="body"
-                children={(field) => (
-                  <Field>
-                    <Textarea
-                      name={field.name}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => {
-                        field.handleChange(e.target.value);
-                      }}
-                      placeholder="Your feedback helps us improve..."
-                      rows={4}
-                    />
-                  </Field>
-                )}
-              />
-              <Field orientation="horizontal">
-                <Button type="submit">Add Note</Button>
-                <Button
-                variant="destructive"
-                  type="button"
-                  onClick={() => {
-                    form.reset();
-                    onCancel();
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Field>
-            </FieldGroup>
-          </FieldSet>
+                </FieldGroup>
+              </FieldSet>
+            )}
+          />
         </form>
       </CardContent>
     </Card>
