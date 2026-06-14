@@ -1,0 +1,10 @@
+import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
+
+const NOTE_TABLE_NAME = `${process.env.DATABASE_TABLE_PREFIX!}-user`;
+
+export const notes = pgTable(NOTE_TABLE_NAME, {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: text("title").notNull(),
+  body: text("body").notNull(),
+  isArchived: boolean("arhived").default(false),
+});

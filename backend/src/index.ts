@@ -1,14 +1,12 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
+import { logger } from "hono/logger";
 
-const app = new Hono()
+const app = new Hono();
 
-const welcomeStrings = [
-  'Hello Hono!',
-  'To learn more about Hono on Vercel, visit https://vercel.com/docs/frameworks/backend/hono'
-]
+app.use(logger());
 
-app.get('/', (c) => {
-  return c.text(welcomeStrings.join('\n\n'))
-})
+app.get("/", (c) => {
+  return c.json({ message: "You are entering this area" });
+});
 
-export default app
+export default app;
