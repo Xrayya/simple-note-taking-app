@@ -1,6 +1,7 @@
 import { AddNoteForm } from "@/components/add-note-form";
 import { NoteCard } from "@/components/note-card";
 import { SearchAddNote } from "@/components/search-add-note";
+import { NotesProvider } from "@/contexts/notes-context";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -12,12 +13,8 @@ type Note = {
 };
 
 function Home() {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [newNote, setNewNote] = useState<Note | undefined>(undefined);
-  const [viewdNote, setViewedNote] = useState<Note | undefined>(undefined);
-
   return (
-    <>
+    <NotesProvider>
       <h1 className="text-center text-2xl my-16">Simple Note Taking App</h1>
 
       <section className="my-4">
@@ -60,6 +57,6 @@ function Home() {
           <NoteCard></NoteCard>
         </div>
       </section>
-    </>
+    </NotesProvider>
   );
 }

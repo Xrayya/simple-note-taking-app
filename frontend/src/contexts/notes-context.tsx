@@ -1,4 +1,9 @@
-import { createContext, useState, type PropsWithChildren } from "react";
+import {
+  createContext,
+  useEffect,
+  useState,
+  type PropsWithChildren,
+} from "react";
 
 type NoteInput = {
   title: string;
