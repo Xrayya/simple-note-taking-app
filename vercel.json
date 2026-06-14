@@ -7,7 +7,7 @@
     },
     "backend": {
       "root": "backend",
-      "routePrefix": "/api/backend",
+      "routePrefix": "/api/",
       "framework": "hono"
     }
   }
