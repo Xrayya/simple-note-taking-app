@@ -4,6 +4,7 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
+import z, { safeParse } from "zod";
 
 type NoteInput = {
   title: string;
@@ -25,6 +26,37 @@ export const NotesContext = createContext<NotesContextType | undefined>(
 
 export function NotesProvider({ children }: PropsWithChildren) {
   const [notes, setNotes] = useState<Note[]>([]);
+
+  useEffect(() => {
+    const savedNotesString = localStorage.getItem("notes");
+
+    if (!savedNotesString) {
+      return;
+    }
+
+    const parsedSavedNotes = JSON.parse(savedNotesString);
+
+    const validNotesSchema = z.array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        body: z.string(),
+      }),
+    );
+
+    const validatedSavedNotes = validNotesSchema.safeParse(parsedSavedNotes);
+
+    if (!validatedSavedNotes.success) {
+      localStorage.removeItem("notes");
+      return;
+    }
+
+    setNotes(validatedSavedNotes.data);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }, [notes]);
 
   const addNote = (note: NoteInput) => {
     const newNote: Note = { ...note, id: `${notes.length + 1}` };
