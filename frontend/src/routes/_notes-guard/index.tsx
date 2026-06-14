@@ -52,12 +52,12 @@ function Home() {
 
       <section className="my-8">
         <h2>Active Note</h2>
-        <NoteGrid notes={notes} />
+        <NoteGrid notes={notes.filter((note) => !note.isArchived)} />
       </section>
 
       <section className="my-8">
         <h2>Archived Note</h2>
-        <NoteGrid notes={notes} />
+        <NoteGrid notes={notes.filter((note) => note.isArchived)} />
       </section>
     </>
   );
