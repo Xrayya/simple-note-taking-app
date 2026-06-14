@@ -3,6 +3,7 @@ import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import { BaseError } from "./exceptions/base";
 import { InvalidRequestError } from "./exceptions/validation";
+import { notesRoute } from "./routes/notes";
 
 const app = new Hono();
 
@@ -13,6 +14,8 @@ app.get("/", (c) => {
     message: "You are entering simple note taking app backend route",
   });
 });
+
+app.route("notes", notesRoute);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
