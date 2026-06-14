@@ -1,11 +1,10 @@
 import { AddNoteForm } from "@/components/add-note-form";
 import { NoteGrid } from "@/components/note-grid";
 import { SearchAddNote } from "@/components/search-add-note";
-import { type Note } from "@/contexts/notes-context";
 import { useNotes } from "@/hooks/use-notes";
 import { cn } from "@/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 
 export const Route = createFileRoute("/_notes-guard/")({ component: Home });
 
