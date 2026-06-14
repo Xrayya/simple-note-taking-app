@@ -53,8 +53,8 @@ function Home() {
         />
         <AddNoteForm
           className={cn(isAddNoteFormShowed ? null : "hidden")}
-          // onCompleteSubmit={handleAddNoteCompleteSubmit}
-          // onCancel={handleAddNoteFormCancel}
+          onCompleteSubmit={handleAddNoteCompleteSubmit}
+          onCancel={handleAddNoteFormCancel}
         />
       </section>
 
