@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export function TodoCard() {
+export function NoteCard() {
   return (
     <Card size="sm" className="mx-auto w-full">
       <CardHeader>

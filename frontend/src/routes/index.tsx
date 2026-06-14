@@ -1,6 +1,6 @@
 import { AddNoteForm } from "@/components/add-note-form";
+import { NoteCard } from "@/components/note-card";
 import { SearchAddNote } from "@/components/search-add-note";
-import { TodoCard } from "@/components/todo-card";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -12,9 +12,9 @@ type Note = {
 };
 
 function Home() {
-  // const [notes, setNotes] = useState<Note[]>([]);
-  // const [newNote, setNewNote] = useState<Note | undefined>(undefined);
-  // const [viewdNote, setViewedNote] = useState<Note | undefined>(undefined);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [newNote, setNewNote] = useState<Note | undefined>(undefined);
+  const [viewdNote, setViewedNote] = useState<Note | undefined>(undefined);
 
   return (
     <>
@@ -28,36 +28,36 @@ function Home() {
       <section className="my-8">
         <h2>Active Note</h2>
         <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(24rem,1fr))]">
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
         </div>
       </section>
 
       <section className="my-8">
         <h2>Archived Note</h2>
         <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(24rem,1fr))]">
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
-          <TodoCard></TodoCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
+          <NoteCard></NoteCard>
         </div>
       </section>
     </>
