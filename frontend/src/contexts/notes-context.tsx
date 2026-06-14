@@ -11,7 +11,7 @@ type NoteInput = {
   body: string;
 };
 
-type Note = NoteInput & { id: string };
+export type Note = NoteInput & { id: string };
 
 interface NotesContextType {
   notes: Note[];

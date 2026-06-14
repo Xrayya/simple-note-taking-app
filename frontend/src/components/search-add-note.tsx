@@ -7,14 +7,28 @@ import {
   InputGroupAddon,
   InputGroupButton,
 } from "./ui/input-group";
+import type { ChangeEvent, ComponentProps } from "react";
 
-export function SearchAddNote() {
+type Props = ComponentProps<"fieldset"> & {
+  onNewNoteButtonClick?: () => void;
+  onSearchChange?: (e: ChangeEvent<HTMLInputElement, HTMLInputElement>) => void;
+};
+
+export function SearchAddNote({
+  onNewNoteButtonClick,
+  onSearchChange,
+  ...restProps
+}: Props) {
   return (
-    <FieldSet className="w-full my-4">
+    <FieldSet {...restProps} className="w-full my-4">
       <FieldGroup className="flex flex-row gap-4">
         <Field>
           <InputGroup>
-            <InputGroupInput id="search-note" placeholder="Search Note..." />
+            <InputGroupInput
+              id="search-note"
+              placeholder="Search Note..."
+              onChange={onSearchChange}
+            />
             <InputGroupAddon align="inline-start">
               <SearchIcon />
             </InputGroupAddon>
@@ -27,7 +41,7 @@ export function SearchAddNote() {
           </InputGroup>
         </Field>
         <Field className="w-fit">
-          <Button type="button">
+          <Button type="button" onClick={onNewNoteButtonClick}>
             <NotebookPen /> New Note
           </Button>
         </Field>

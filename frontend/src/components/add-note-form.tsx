@@ -1,18 +1,23 @@
 import { useNotes } from "@/hooks/use-notes";
+import { useForm } from "@tanstack/react-form";
+import { LoaderCircle } from "lucide-react";
+import type { ComponentProps } from "react";
+import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { useForm } from "@tanstack/react-form";
-import { Button } from "./ui/button";
-import type { ComponentProps } from "react";
-import { LoaderCircle } from "lucide-react";
 
 type Props = ComponentProps<"div"> & {
-  onCancel: () => void;
+  onCancel?: () => void;
+  onCompleteSubmit?: () => void;
 };
 
-export function AddNoteForm({ onCancel, ...restProps }: Props) {
+export function AddNoteForm({
+  onCancel,
+  onCompleteSubmit,
+  ...restProps
+}: Props) {
   const { addNote } = useNotes();
 
   const form = useForm({
@@ -22,6 +27,7 @@ export function AddNoteForm({ onCancel, ...restProps }: Props) {
     },
     onSubmit: ({ value }) => {
       addNote(value);
+      form.reset();
     },
   });
 
@@ -36,7 +42,7 @@ export function AddNoteForm({ onCancel, ...restProps }: Props) {
             e.preventDefault();
             e.stopPropagation();
             form.handleSubmit();
-            form.reset();
+            onCompleteSubmit?.();
           }}
         >
           <form.Subscribe
@@ -95,7 +101,7 @@ export function AddNoteForm({ onCancel, ...restProps }: Props) {
                         e.preventDefault();
                         e.stopPropagation();
                         form.reset();
-                        onCancel();
+                        onCancel?.();
                       }}
                     >
                       Cancel

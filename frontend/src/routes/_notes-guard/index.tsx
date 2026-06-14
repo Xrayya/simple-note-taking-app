@@ -1,0 +1,80 @@
+import { AddNoteForm } from "@/components/add-note-form";
+import { NoteGrid } from "@/components/note-grid";
+import { SearchAddNote } from "@/components/search-add-note";
+import { type Note } from "@/contexts/notes-context";
+import { useNotes } from "@/hooks/use-notes";
+import { cn } from "@/lib/utils";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState, type ChangeEvent } from "react";
+
+export const Route = createFileRoute("/_notes-guard/")({ component: Home });
+
+function Home() {
+  const { notes } = useNotes();
+  const [isAddNoteFormShowed, setAddNoteFormShowed] = useState<boolean>(false);
+  const [searchString, setSearchString] = useState<string>("");
+
+  const handleNewNoteButtonClick = () => {
+    setAddNoteFormShowed(true);
+  };
+
+  const handleSearchChange = (
+    e: ChangeEvent<HTMLInputElement, HTMLInputElement>,
+  ) => {
+    setSearchString(e.target.value);
+  };
+
+  const handleAddNoteFormCancel = () => {
+    setAddNoteFormShowed(false);
+  };
+
+  const handleAddNoteCompleteSubmit = () => {
+    setTimeout(() => {
+      setAddNoteFormShowed(false);
+    }, 1000);
+  };
+
+  const handleNoteArchive = (noteId: Note["id"]) => {
+    alert(`note with id ${noteId} archived; not implemented yet`);
+  };
+
+  const handleNoteDelete = (noteId: Note["id"]) => {
+    alert(`note with id ${noteId} deleted; not implemented yet`);
+  };
+
+  return (
+    <>
+      <h1 className="text-center text-2xl my-16">Simple Note Taking App</h1>
+
+      <section className="my-4">
+        <SearchAddNote
+          onNewNoteButtonClick={handleNewNoteButtonClick}
+          onSearchChange={handleSearchChange}
+        />
+        <AddNoteForm
+          className={cn(isAddNoteFormShowed ? null : "hidden")}
+          // onCompleteSubmit={handleAddNoteCompleteSubmit}
+          // onCancel={handleAddNoteFormCancel}
+        />
+      </section>
+
+      <section className="my-8">
+        <h2>Active Note</h2>
+        <NoteGrid
+          notes={notes}
+          onNoteArchive={handleNoteArchive}
+          onNoteDelete={handleNoteDelete}
+        />
+      </section>
+
+      <section className="my-8">
+        <h2>Archived Note</h2>
+        <NoteGrid
+          notes={notes}
+          onNoteArchive={handleNoteArchive}
+          onNoteDelete={handleNoteDelete}
+        />
+      </section>
+    </>
+  );
+}

@@ -9,50 +9,75 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as NotesGuardRouteImport } from './routes/_notes-guard'
+import { Route as NotesGuardIndexRouteImport } from './routes/_notes-guard/index'
 
-const IndexRoute = IndexRouteImport.update({
+const NotesGuardRoute = NotesGuardRouteImport.update({
+  id: '/_notes-guard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotesGuardIndexRoute = NotesGuardIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => NotesGuardRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof NotesGuardIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof NotesGuardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_notes-guard': typeof NotesGuardRouteWithChildren
+  '/_notes-guard/': typeof NotesGuardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
   to: '/'
-  id: '__root__' | '/'
+  id: '__root__' | '/_notes-guard' | '/_notes-guard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  NotesGuardRoute: typeof NotesGuardRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_notes-guard': {
+      id: '/_notes-guard'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof NotesGuardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_notes-guard/': {
+      id: '/_notes-guard/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof NotesGuardIndexRouteImport
+      parentRoute: typeof NotesGuardRoute
     }
   }
 }
 
+interface NotesGuardRouteChildren {
+  NotesGuardIndexRoute: typeof NotesGuardIndexRoute
+}
+
+const NotesGuardRouteChildren: NotesGuardRouteChildren = {
+  NotesGuardIndexRoute: NotesGuardIndexRoute,
+}
+
+const NotesGuardRouteWithChildren = NotesGuardRoute._addFileChildren(
+  NotesGuardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  NotesGuardRoute: NotesGuardRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
