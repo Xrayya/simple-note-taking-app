@@ -2,7 +2,7 @@
   "name": "hono",
   "type": "module",
   "scripts": {
-    "dev": "bun run src/index.ts"
+    "dev": "bun --hot src/index.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",
