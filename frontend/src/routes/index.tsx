@@ -1,14 +1,65 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { AddNoteForm } from "@/components/add-note-form";
+import { SearchAddNote } from "@/components/search-add-note";
+import { TodoCard } from "@/components/todo-card";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
-export const Route = createFileRoute('/')({ component: Home })
+export const Route = createFileRoute("/")({ component: Home });
+
+type Note = {
+  title: string;
+  body: string;
+};
 
 function Home() {
+  // const [notes, setNotes] = useState<Note[]>([]);
+  // const [newNote, setNewNote] = useState<Note | undefined>(undefined);
+  // const [viewdNote, setViewedNote] = useState<Note | undefined>(undefined);
+
   return (
-    <div className="p-8">
-      <h1 className="text-4xl font-bold">Welcome to TanStack Start</h1>
-      <p className="mt-4 text-lg">
-        Edit <code>src/routes/index.tsx</code> to get started.
-      </p>
-    </div>
-  )
+    <>
+      <h1 className="text-center text-2xl my-16">Simple Note Taking App</h1>
+
+      <section className="my-4">
+        <SearchAddNote />
+        <AddNoteForm />
+      </section>
+
+      <section className="my-8">
+        <h2>Active Note</h2>
+        <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(24rem,1fr))]">
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+        </div>
+      </section>
+
+      <section className="my-8">
+        <h2>Archived Note</h2>
+        <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(24rem,1fr))]">
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+          <TodoCard></TodoCard>
+        </div>
+      </section>
+    </>
+  );
 }
