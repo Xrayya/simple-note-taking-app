@@ -5,17 +5,9 @@ import { NoteCard } from "./note-card";
 
 type Props = ComponentProps<"div"> & {
   notes: Note[];
-  onNoteArchive?: (noteId: Note["id"]) => void;
-  onNoteDelete?: (noteId: Note["id"]) => void;
 };
 
-export function NoteGrid({
-  notes,
-  onNoteArchive,
-  onNoteDelete,
-  className,
-  ...restProps
-}: Props) {
+export function NoteGrid({ notes, className, ...restProps }: Props) {
   return (
     <div
       className={cn(
@@ -24,8 +16,8 @@ export function NoteGrid({
         { ...restProps },
       )}
     >
-      {notes.map((note) => (
-        <NoteCard key={note.id} {...note} onArchive={onNoteArchive} onDelete={onNoteDelete} />
+      {notes.map((note, idx) => (
+        <NoteCard key={idx} {...note} />
       ))}
     </div>
   );

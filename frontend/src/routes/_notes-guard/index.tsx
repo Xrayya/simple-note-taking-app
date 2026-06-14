@@ -34,14 +34,6 @@ function Home() {
     }, 1000);
   };
 
-  const handleNoteArchive = (noteId: Note["id"]) => {
-    alert(`note with id ${noteId} archived; not implemented yet`);
-  };
-
-  const handleNoteDelete = (noteId: Note["id"]) => {
-    alert(`note with id ${noteId} deleted; not implemented yet`);
-  };
-
   return (
     <>
       <h1 className="text-center text-2xl my-16">Simple Note Taking App</h1>
@@ -60,20 +52,12 @@ function Home() {
 
       <section className="my-8">
         <h2>Active Note</h2>
-        <NoteGrid
-          notes={notes}
-          onNoteArchive={handleNoteArchive}
-          onNoteDelete={handleNoteDelete}
-        />
+        <NoteGrid notes={notes} />
       </section>
 
       <section className="my-8">
         <h2>Archived Note</h2>
-        <NoteGrid
-          notes={notes}
-          onNoteArchive={handleNoteArchive}
-          onNoteDelete={handleNoteDelete}
-        />
+        <NoteGrid notes={notes} />
       </section>
     </>
   );

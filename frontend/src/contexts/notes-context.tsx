@@ -4,11 +4,12 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import z, { safeParse } from "zod";
+import z from "zod";
 
 type NoteInput = {
   title: string;
   body: string;
+  isArchived: boolean;
 };
 
 export type Note = NoteInput & { id: string };
@@ -41,6 +42,7 @@ export function NotesProvider({ children }: PropsWithChildren) {
         id: z.string(),
         title: z.string(),
         body: z.string(),
+        isArchived: z.boolean(),
       }),
     );
 

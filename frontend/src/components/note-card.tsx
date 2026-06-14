@@ -8,30 +8,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Note } from "@/contexts/notes-context";
+import { useNotes } from "@/hooks/use-notes";
 import { cn } from "@/lib/utils";
 import type { ComponentProps } from "react";
 
-type Props = ComponentProps<"div"> &
-  Note & {
-    onArchive?: (noteId: Note["id"]) => void;
-    onDelete?: (noteId: Note["id"]) => void;
-  };
+type Props = ComponentProps<"div"> & Note;
 
 export function NoteCard({
   id,
   title,
   body,
+  isArchived,
   className,
-  onArchive,
-  onDelete,
   ...restProps
 }: Props) {
+  const { updateNote, deleteNote } = useNotes();
+
   return (
-    <Card
-      size="sm"
-      className={cn("mx-auto w-full", className)}
-      {...restProps}
-    >
+    <Card size="sm" className={cn("mx-auto w-full", className)} {...restProps}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>
@@ -47,17 +41,21 @@ export function NoteCard({
           size="sm"
           className="w-full"
           onClick={() => {
-            onArchive?.(id);
+            updateNote(id, {
+              title,
+              body,
+              isArchived: !isArchived,
+            });
           }}
         >
-          Archive
+          {isArchived ? "Unarchived" : "Archive"}
         </Button>
         <Button
           variant="outline"
           size="sm"
           className="w-full"
           onClick={() => {
-            onDelete?.(id);
+            deleteNote(id);
           }}
         >
           Delete
