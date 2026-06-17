@@ -49,3 +49,20 @@ export async function updateNote({
 
   return result[0];
 }
+
+export async function deleteNote({
+  noteId,
+}: {
+  noteId: ReturnedNoteType["id"];
+}): Promise<Pick<ReturnedNoteType, "id" | "title">> {
+  const result = await db
+    .delete(notes)
+    .where(eq(notes.id, noteId))
+    .returning({ id: notes.id, title: notes.title });
+
+  if (!result[0]) {
+    throw new NoteNotFoundError(noteId);
+  }
+
+  return result[0];
+}

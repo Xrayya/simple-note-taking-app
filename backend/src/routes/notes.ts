@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { addNote, getNotes, updateNote } from "../services/notes";
+import { addNote, deleteNote, getNotes, updateNote } from "../services/notes";
 import { validateJsonRequest } from "../middlewares/validation";
 import { addNoteSchema, updateNoteSchema } from "../validation-schemas/notes";
 
@@ -25,6 +25,10 @@ export const notesRoute = new Hono()
 
     return c.json({ updatedNote }, 200);
   })
-  .delete("/", (c) => {
-    return c.json({ message: "entering notes route" });
+  .delete("/:noteId", async (c) => {
+    const noteId = c.req.param("noteId");
+
+    const deletedNote = await deleteNote({ noteId });
+
+    return c.json({ deletedBook: deletedNote });
   });
