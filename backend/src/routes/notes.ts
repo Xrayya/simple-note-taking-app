@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { addNote, deleteNote, getNotes, updateNote } from "../services/notes";
 import { validateJsonRequest } from "../middlewares/validation";
+import { addNote, deleteNote, getNotes, updateNote } from "../services/notes";
 import { addNoteSchema, updateNoteSchema } from "../validation-schemas/notes";
 
 export const notesRoute = new Hono()
@@ -30,5 +30,5 @@ export const notesRoute = new Hono()
 
     const deletedNote = await deleteNote({ noteId });
 
-    return c.json({ deletedBook: deletedNote });
+    return c.json({ deletedNote });
   });
