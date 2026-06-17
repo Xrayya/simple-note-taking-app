@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import { addNote, getNotes } from "../services/notes";
+import { addNote, getNotes, updateNote } from "../services/notes";
 import { validateJsonRequest } from "../middlewares/validation";
-import { addNoteSchema } from "../validation-schemas/notes";
+import { addNoteSchema, updateNoteSchema } from "../validation-schemas/notes";
 
 export const notesRoute = new Hono()
   .get("/", async (c) => {
@@ -16,8 +16,14 @@ export const notesRoute = new Hono()
 
     return c.json({ newNote }, 201);
   })
-  .put("/", (c) => {
-    return c.json({ message: "entering notes route" });
+  .put("/:noteId", ...validateJsonRequest(updateNoteSchema), async (c) => {
+    const noteId = c.req.param("noteId");
+
+    const updatedNoteData = c.req.valid("json");
+
+    const updatedNote = await updateNote({ noteId, updatedNoteData });
+
+    return c.json({ updatedNote }, 200);
   })
   .delete("/", (c) => {
     return c.json({ message: "entering notes route" });
