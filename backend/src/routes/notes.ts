@@ -10,9 +10,9 @@ export const notesRoute = new Hono()
     return c.json({ notes }, 200);
   })
   .post("/", ...validateJsonRequest(addNoteSchema), async (c) => {
-    const payload = c.req.valid("json");
+    const newNoteData = c.req.valid("json");
 
-    const newNote = await addNote(payload);
+    const newNote = await addNote(newNoteData);
 
     return c.json({ newNote }, 201);
   })
