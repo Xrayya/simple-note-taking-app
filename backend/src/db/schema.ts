@@ -1,6 +1,6 @@
 import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-const NOTE_TABLE_NAME = `${process.env.DATABASE_TABLE_PREFIX!}-user`;
+const NOTE_TABLE_NAME = `${process.env["DATABASE_TABLE_PREFIX"]!}-user`;
 
 const timestamps = {
   createdAt: timestamp("created_at").defaultNow().notNull(),
