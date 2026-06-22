@@ -3,13 +3,13 @@ import { db } from "../db/db";
 import { notes } from "../db/schema";
 import { NoteNotFoundError } from "../exceptions/notes";
 
-type InputNoteType = {
+export type InputNoteType = {
   title: string;
   body: string;
   isArchived?: boolean;
 };
 
-type ReturnedNoteType = InputNoteType & {
+export type ReturnedNoteType = InputNoteType & {
   id: string;
   createdAt: Date;
   updatedAt: Date | null;
