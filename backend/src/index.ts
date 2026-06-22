@@ -10,12 +10,15 @@ const app = new Hono();
 app.use(logger());
 
 app.get("/", (c) => {
-  return c.json({
-    message: "You are entering simple note taking app backend route",
-  });
+  return c.json(
+    {
+      message: "You are entering simple note taking app backend route",
+    },
+    200,
+  );
 });
 
-app.route("notes", notesRoute);
+app.route("/notes", notesRoute);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
