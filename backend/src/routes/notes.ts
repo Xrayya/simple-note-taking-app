@@ -30,5 +30,5 @@ export const notesRoute = new Hono()
 
     const deletedNote = await deleteNote({ noteId });
 
-    return c.json({ deletedNote });
+    return c.json({ deletedNote }, 200);
   });
