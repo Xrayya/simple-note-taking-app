@@ -206,9 +206,9 @@ describe("Notes", () => {
 
     expect(
       payload2.notes.filter(
-        (note: any) => note.id !== mockNotesDB[selectedNoteIdx]?.id,
+        (note: any) => note.id === mockNotesDB[selectedNoteIdx]?.id,
       ).length,
-    ).toBe(1);
+    ).toBe(0);
 
     mockNotesDB = payload2.notes;
   });
