@@ -21,6 +21,7 @@ app.get("/", (c) => {
 app.route("/notes", notesRoute);
 
 app.onError((err, c) => {
+  console.log(err)
   if (err instanceof HTTPException) {
     return c.json(
       { error: { name: err.name, message: err.message } },
