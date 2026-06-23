@@ -26,7 +26,7 @@ export function AddNoteForm({
       body: "",
     },
     onSubmit: ({ value }) => {
-      addNote(value);
+      addNote({ ...value, isArchived: false });
       form.reset();
     },
   });
@@ -47,12 +47,12 @@ export function AddNoteForm({
         >
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
-              <FieldSet className="w-full my-4">
+          >
+            {([canSubmit, isSubmitting]) => (
+              <FieldSet className="my-4 w-full">
                 <FieldGroup>
-                  <form.Field
-                    name="title"
-                    children={(field) => (
+                  <form.Field name="title">
+                    {(field) => (
                       <Field>
                         <Input
                           type="text"
@@ -67,10 +67,9 @@ export function AddNoteForm({
                         />
                       </Field>
                     )}
-                  />
-                  <form.Field
-                    name="body"
-                    children={(field) => (
+                  </form.Field>
+                  <form.Field name="body">
+                    {(field) => (
                       <Field>
                         <Textarea
                           name={field.name}
@@ -85,7 +84,7 @@ export function AddNoteForm({
                         />
                       </Field>
                     )}
-                  />
+                  </form.Field>
                   <Field orientation="horizontal">
                     <Button type="submit" disabled={!canSubmit}>
                       {isSubmitting ? (
@@ -110,7 +109,7 @@ export function AddNoteForm({
                 </FieldGroup>
               </FieldSet>
             )}
-          />
+          </form.Subscribe>
         </form>
       </CardContent>
     </Card>

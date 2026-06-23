@@ -35,7 +35,7 @@ export function NoteCard({
       <CardContent>
         <p>{body}</p>
       </CardContent>
-      <CardFooter className="grid gap-2 grid-cols-2">
+      <CardFooter className="grid grid-cols-2 gap-2">
         <Button
           variant="outline"
           size="sm"

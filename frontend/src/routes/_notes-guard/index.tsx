@@ -35,7 +35,7 @@ function Home() {
 
   return (
     <>
-      <h1 className="text-center text-2xl my-16">Simple Note Taking App</h1>
+      <h1 className="my-16 text-center text-2xl">Simple Note Taking App</h1>
 
       <section className="my-4">
         <SearchAddNote

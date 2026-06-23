@@ -26,13 +26,11 @@ export const NotesContext = createContext<NotesContextType | undefined>(
 );
 
 export function NotesProvider({ children }: PropsWithChildren) {
-  const [notes, setNotes] = useState<Note[]>([]);
-
-  useEffect(() => {
+  const [notes, setNotes] = useState<Note[]>(() => {
     const savedNotesString = localStorage.getItem("notes");
 
     if (!savedNotesString) {
-      return;
+      return [];
     }
 
     const parsedSavedNotes = JSON.parse(savedNotesString);
@@ -50,11 +48,11 @@ export function NotesProvider({ children }: PropsWithChildren) {
 
     if (!validatedSavedNotes.success) {
       localStorage.removeItem("notes");
-      return;
+      return [];
     }
 
-    setNotes(validatedSavedNotes.data);
-  }, []);
+    return validatedSavedNotes.data || [];
+  });
 
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
