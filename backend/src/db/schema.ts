@@ -11,6 +11,6 @@ export const notes = pgTable(NOTE_TABLE_NAME, {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
   body: text("body").notNull(),
-  isArchived: boolean("arhived").default(false).notNull(),
-  ...timestamps
+  isArchived: boolean("archived").default(false).notNull(),
+  ...timestamps,
 });
