@@ -1,17 +1,47 @@
 import { AddNoteForm } from "@/components/add-note-form";
 import { NoteGrid } from "@/components/note-grid";
 import { SearchAddNote } from "@/components/search-add-note";
-import { useNotes } from "@/hooks/use-notes";
 import { cn } from "@/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type ChangeEvent } from "react";
 
 export const Route = createFileRoute("/_notes-guard/")({ component: Home });
 
+const notesOptions = queryOptions({
+  queryKey: ["notes"],
+  queryFn: async (): Promise<{
+    notes: {
+      id: string;
+      createdAt: string;
+      updatedAt: string | null;
+      title: string;
+      body: string;
+      isArchived: boolean;
+    }[];
+  }> => {
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_ENDPOINT!}/notes`,
+    );
+
+    if (!response.ok) {
+      const payload = await response.json();
+
+      throw new Error(
+        payload?.error?.message || "An error occurred while fetching data",
+        { cause: payload?.error?.name },
+      );
+    }
+
+    const payload = await response.json();
+    return payload;
+  },
+});
+
 function Home() {
-  const { notes } = useNotes();
   const [isAddNoteFormShowed, setAddNoteFormShowed] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string>("");
+
+  const { data, isLoading, error } = useQuery(notesOptions);
 
   const handleNewNoteButtonClick = () => {
     setAddNoteFormShowed(true);
@@ -51,12 +81,28 @@ function Home() {
 
       <section className="my-8">
         <h2>Active Note</h2>
-        <NoteGrid notes={notes.filter((note) => !note.isArchived)} />
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div>{error.message}</div>
+        ) : (
+          <NoteGrid
+            notes={data?.notes.filter((note) => !note.isArchived) || []}
+          />
+        )}
       </section>
 
       <section className="my-8">
         <h2>Archived Note</h2>
-        <NoteGrid notes={notes.filter((note) => note.isArchived)} />
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div>{error.message}</div>
+        ) : (
+          <NoteGrid
+            notes={data?.notes.filter((note) => note.isArchived) || []}
+          />
+        )}
       </section>
     </>
   );

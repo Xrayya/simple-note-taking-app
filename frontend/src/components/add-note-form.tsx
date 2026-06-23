@@ -1,12 +1,18 @@
-import { useNotes } from "@/hooks/use-notes";
 import { useForm } from "@tanstack/react-form";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { LoaderCircle } from "lucide-react";
 import type { ComponentProps } from "react";
+import type z from "zod";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { addNoteSchema } from "#/schema-validation/notes.ts";
 
 type Props = ComponentProps<"div"> & {
   onCancel?: () => void;
@@ -18,15 +24,61 @@ export function AddNoteForm({
   onCompleteSubmit,
   ...restProps
 }: Props) {
-  const { addNote } = useNotes();
+  const queryClient = useQueryClient();
+
+  const addNote = useMutation({
+    mutationFn: async (
+      newNote: z.infer<typeof addNoteSchema>,
+    ): Promise<{
+      newNote: {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date | null;
+        title: string;
+        body: string;
+        isArchived?: boolean;
+      };
+    }> => {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_ENDPOINT}/notes`,
+        {
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+          body: JSON.stringify({ ...newNote }),
+        },
+      );
+
+      if (!response.ok) {
+        const payload = await response.json();
+
+        throw new Error(
+          payload?.error?.message || "An error occurred while fetching data",
+          { cause: payload?.error?.name },
+        );
+      }
+
+      const payload = await response.json();
+      return payload;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(
+        queryOptions({
+          queryKey: ["notes"],
+        }),
+      );
+    },
+  });
 
   const form = useForm({
     defaultValues: {
       title: "",
       body: "",
     },
+    validators: {
+      onChange: addNoteSchema,
+    },
     onSubmit: ({ value }) => {
-      addNote({ ...value, isArchived: false });
+      addNote.mutate({ ...value });
       form.reset();
     },
   });
