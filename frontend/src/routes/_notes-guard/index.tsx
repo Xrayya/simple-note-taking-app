@@ -2,8 +2,9 @@ import { AddNoteForm } from "@/components/add-note-form";
 import { NoteGrid } from "@/components/note-grid";
 import { SearchAddNote } from "@/components/search-add-note";
 import { cn } from "@/lib/utils";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_notes-guard/")({ component: Home });
 
@@ -47,10 +48,8 @@ function Home() {
     setAddNoteFormShowed(true);
   };
 
-  const handleSearchChange = (
-    e: ChangeEvent<HTMLInputElement, HTMLInputElement>,
-  ) => {
-    setSearchString(e.target.value);
+  const handleSearchChange = (s: string) => {
+    setSearchString(s);
   };
 
   const handleAddNoteFormCancel = () => {

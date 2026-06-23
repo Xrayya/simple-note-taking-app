@@ -1,17 +1,17 @@
-import { SearchIcon, X, NotebookPen } from "lucide-react";
+import { NotebookPen, SearchIcon, X } from "lucide-react";
+import type { ComponentProps } from "react";
 import { Button } from "./ui/button";
 import { Field, FieldGroup, FieldSet } from "./ui/field";
 import {
-  InputGroup,
-  InputGroupInput,
-  InputGroupAddon,
-  InputGroupButton,
+    InputGroup,
+    InputGroupAddon,
+    InputGroupButton,
+    InputGroupInput,
 } from "./ui/input-group";
-import type { ChangeEvent, ComponentProps } from "react";
 
 type Props = ComponentProps<"fieldset"> & {
   onNewNoteButtonClick?: () => void;
-  onSearchChange?: (e: ChangeEvent<HTMLInputElement, HTMLInputElement>) => void;
+  onSearchChange?: (s: string) => void;
 };
 
 export function SearchAddNote({
@@ -27,7 +27,7 @@ export function SearchAddNote({
             <InputGroupInput
               id="search-note"
               placeholder="Search Note..."
-              onChange={onSearchChange}
+              onChange={(e) => onSearchChange?.(e.target.value)}
             />
             <InputGroupAddon align="inline-start">
               <SearchIcon />
