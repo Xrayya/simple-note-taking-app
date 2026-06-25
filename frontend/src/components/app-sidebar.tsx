@@ -1,26 +1,23 @@
-"use client";
-
-import * as React from "react";
-
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarRail,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import {
-    BookOpenIcon,
-    BotIcon,
-    GalleryVerticalEndIcon,
-    Settings2Icon,
-    TerminalSquareIcon
+  BookOpenIcon,
+  BotIcon,
+  GalleryVerticalEndIcon,
+  Settings2Icon,
+  TerminalSquareIcon,
 } from "lucide-react";
+import { ThemeToggle } from "./theme-toggle";
 
 // This is sample data.
 const data = {
@@ -140,6 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
+        <ThemeToggle />
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "../styles.css";
 import { TooltipProvider } from "#/components/ui/tooltip.tsx";
+import { ThemeProvider } from "#/contexts/theme-context.tsx";
 
 const queryClient = new QueryClient();
 
@@ -16,9 +17,11 @@ function RootComponent() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Outlet />
-        </TooltipProvider>
+        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+          <TooltipProvider>
+            <Outlet />
+          </TooltipProvider>
+        </ThemeProvider>
       </QueryClientProvider>
       <TanStackDevtools
         config={{
