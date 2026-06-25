@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, getTableColumns, type Column } from "drizzle-orm";
 import { db } from "../db/db";
 import { notes } from "../db/schema";
 import { NoteNotFoundError } from "../exceptions/notes";
@@ -15,8 +15,26 @@ export type ReturnedNoteType = InputNoteType & {
   updatedAt: Date | null;
 };
 
-export async function getNotes(): Promise<ReturnedNoteType[]> {
-  const result = await db.query.notes.findMany();
+export async function getNotes(
+  filter?: Partial<typeof notes.$inferSelect>,
+): Promise<ReturnedNoteType[]> {
+  const conditions = [];
+
+  // NOTE: a hacky way generated from Gemini
+  const columns = getTableColumns(notes);
+
+  if (filter) {
+    for (const [key, value] of Object.entries(filter)) {
+      if (value !== undefined && key in columns) {
+        const column = columns[key as keyof typeof columns] as Column;
+        conditions.push(eq(column, value));
+      }
+    }
+  }
+
+  const result = await db.query.notes.findMany({
+    where: conditions.length > 0 ? and(...conditions) : undefined,
+  });
 
   return result;
 }

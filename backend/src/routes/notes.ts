@@ -9,6 +9,16 @@ export const notesRoute = new Hono()
 
     return c.json({ notes }, 200);
   })
+  .get("/active", async (c) => {
+    const activeNotes = await getNotes({ isArchived: false });
+
+    return c.json({ activeNotes }, 200);
+  })
+  .get("/archived", async (c) => {
+    const archivedNotes = await getNotes({ isArchived: true });
+
+    return c.json({ archivedNotes }, 200);
+  })
   .post("/", ...validateJsonRequest(addNoteSchema), async (c) => {
     const newNoteData = c.req.valid("json");
 
