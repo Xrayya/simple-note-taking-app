@@ -14,18 +14,19 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { ChevronRightIcon } from "lucide-react";
+import type { ComponentProps } from "react";
 
 export function NavMain({
   items,
 }: {
   items: {
     title: string;
-    url: string;
     icon?: React.ReactNode;
     isActive?: boolean;
-    items?: {
+    itemArgs?: ComponentProps<typeof SidebarMenuButton>;
+    subItems?: {
       title: string;
-      url: string;
+      itemArgs?: ComponentProps<typeof SidebarMenuSubButton>;
     }[];
   }[];
 }) {
@@ -33,32 +34,30 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupLabel>Notes</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {items.map((item, idx) => (
           <Collapsible
-            key={item.title}
+            key={idx}
             asChild
             defaultOpen={item.isActive}
             className="group/collapsible"
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton tooltip={item.title} {...item.itemArgs}>
                   {item.icon}
                   <span>{item.title}</span>
-                  {item.items ? (
+                  {item.subItems ? (
                     <ChevronRightIcon className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                   ) : null}
                 </SidebarMenuButton>
               </CollapsibleTrigger>
-              {item.items ? (
+              {item.subItems ? (
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {item.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton asChild>
-                          <a href={subItem.url}>
-                            <span>{subItem.title}</span>
-                          </a>
+                    {item.subItems?.map((subItem, idx) => (
+                      <SidebarMenuSubItem key={idx}>
+                        <SidebarMenuSubButton {...subItem.itemArgs}>
+                          {subItem.title}
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

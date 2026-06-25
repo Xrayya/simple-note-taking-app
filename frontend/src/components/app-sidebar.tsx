@@ -10,112 +10,43 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import {
-  BookOpenIcon,
-  BotIcon,
-  GalleryVerticalEndIcon,
-  Settings2Icon,
-  TerminalSquareIcon,
-} from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { Archive, GalleryVerticalEndIcon, Notebook } from "lucide-react";
+import type { ComponentProps } from "react";
+import { Route as activeNotesRoute } from "../routes/_notes-guard";
+import { Route as archivedNotesRoute } from "../routes/_notes-guard/archive";
 import { ThemeToggle } from "./theme-toggle";
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: <TerminalSquareIcon />,
-      isActive: true,
-      // items: [
-      //   {
-      //     title: "History",
-      //     url: "#",
-      //   },
-      //   {
-      //     title: "Starred",
-      //     url: "#",
-      //   },
-      //   {
-      //     title: "Settings",
-      //     url: "#",
-      //   },
-      // ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: <BotIcon />,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: <BookOpenIcon />,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: <Settings2Icon />,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
+const mockUserData = {
+  name: "shadcn",
+  email: "m@example.com",
+  avatar: "/avatars/shadcn.jpg",
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const navigate = useNavigate();
+
+  const mockNavData: ComponentProps<typeof NavMain>["items"] = [
+    {
+      title: "Active Notes",
+      icon: <Notebook />,
+      itemArgs: {
+        onClick: () => {
+          navigate({ to: activeNotesRoute.to });
+        },
+      },
+    },
+    {
+      title: "Archived Notes",
+      icon: <Archive />,
+      itemArgs: {
+        onClick: () => {
+          navigate({ to: archivedNotesRoute.to });
+        },
+      },
+    },
+  ];
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -134,11 +65,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={mockNavData} />
       </SidebarContent>
       <SidebarFooter>
         <ThemeToggle />
-        <NavUser user={data.user} />
+        <NavUser user={mockUserData} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

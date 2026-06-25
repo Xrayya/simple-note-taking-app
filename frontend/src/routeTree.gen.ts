@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as NotesGuardRouteImport } from './routes/_notes-guard'
 import { Route as NotesGuardIndexRouteImport } from './routes/_notes-guard/index'
+import { Route as NotesGuardArchiveRouteImport } from './routes/_notes-guard/archive'
 
 const NotesGuardRoute = NotesGuardRouteImport.update({
   id: '/_notes-guard',
@@ -21,24 +22,32 @@ const NotesGuardIndexRoute = NotesGuardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => NotesGuardRoute,
 } as any)
+const NotesGuardArchiveRoute = NotesGuardArchiveRouteImport.update({
+  id: '/archive',
+  path: '/archive',
+  getParentRoute: () => NotesGuardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof NotesGuardIndexRoute
+  '/archive': typeof NotesGuardArchiveRoute
 }
 export interface FileRoutesByTo {
+  '/archive': typeof NotesGuardArchiveRoute
   '/': typeof NotesGuardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_notes-guard': typeof NotesGuardRouteWithChildren
+  '/_notes-guard/archive': typeof NotesGuardArchiveRoute
   '/_notes-guard/': typeof NotesGuardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/archive'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_notes-guard' | '/_notes-guard/'
+  to: '/archive' | '/'
+  id: '__root__' | '/_notes-guard' | '/_notes-guard/archive' | '/_notes-guard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -61,14 +70,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotesGuardIndexRouteImport
       parentRoute: typeof NotesGuardRoute
     }
+    '/_notes-guard/archive': {
+      id: '/_notes-guard/archive'
+      path: '/archive'
+      fullPath: '/archive'
+      preLoaderRoute: typeof NotesGuardArchiveRouteImport
+      parentRoute: typeof NotesGuardRoute
+    }
   }
 }
 
 interface NotesGuardRouteChildren {
+  NotesGuardArchiveRoute: typeof NotesGuardArchiveRoute
   NotesGuardIndexRoute: typeof NotesGuardIndexRoute
 }
 
 const NotesGuardRouteChildren: NotesGuardRouteChildren = {
+  NotesGuardArchiveRoute: NotesGuardArchiveRoute,
   NotesGuardIndexRoute: NotesGuardIndexRoute,
 }
 
