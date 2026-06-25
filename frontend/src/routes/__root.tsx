@@ -17,9 +17,7 @@ function RootComponent() {
     <>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          {/* <div className="container mx-auto px-8 lg:px-32"> */}
           <Outlet />
-          {/* </div> */}
         </TooltipProvider>
       </QueryClientProvider>
       <TanStackDevtools
