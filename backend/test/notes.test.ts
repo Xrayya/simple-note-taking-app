@@ -16,6 +16,19 @@ const mockNotes: InputNoteType[] = [
   },
 ];
 
+const mockArchivedNotes: InputNoteType[] = [
+  {
+    title: "Test Note 3",
+    body: "lkasd as;lkdf asdfdfl;kjj asdkdlfj alksd jf;ka sdkfj ;aksld f;ka jsdkfk ;askd f;ak sdl;fja;sdk fas d",
+    isArchived: true,
+  },
+  {
+    title: "Test Note 100",
+    body: "Note Body Test 2; babb al wlkj slk ejekjejdk ;alk a askldj l;ewl;jk askd f;ljkasassd;lf ewwldosnwoefn wfoe fwoe",
+    isArchived: true,
+  },
+];
+
 const mockUpdatedNote: InputNoteType = {
   title: "Updated Test Note Title",
   body: "Updated Test Note Body",
@@ -35,7 +48,7 @@ describe("Notes", () => {
     expect(response.status).toBe(200);
   });
 
-  test("should return 201 on valid book add request", async () => {
+  test("should return 201 on valid note add request", async () => {
     const response = await fetch(`${baseUrl}/notes`, {
       method: "POST",
       headers: {
@@ -58,7 +71,7 @@ describe("Notes", () => {
     expect(payload.newNote.updatedAt).toBeNull();
   });
 
-  test("should return 201 on next valid book add request", async () => {
+  test("should return 201 on next valid note add request", async () => {
     const response = await fetch(`${baseUrl}/notes`, {
       method: "POST",
       headers: {
@@ -81,7 +94,7 @@ describe("Notes", () => {
     expect(payload.newNote.updatedAt).toBeNull();
   });
 
-  test("should return 200 on valid book get request", async () => {
+  test("should return 200 on valid note get request", async () => {
     const response = await fetch(`${baseUrl}/notes`);
 
     expect(response.status).toBe(200);
@@ -106,7 +119,61 @@ describe("Notes", () => {
     mockNotesDB = payload.notes;
   });
 
-  test("should return 200 on valid book update request", async () => {
+  test("should return 200 on valid get archived note request", async () => {
+    await db.insert(notes).values(mockArchivedNotes);
+
+    const response = await fetch(`${baseUrl}/notes/archived`);
+
+    expect(response.status).toBe(200);
+
+    const payload: any = await response.json();
+
+    expect(payload.archivedNotes).toBeArray();
+    expect(payload.archivedNotes.length).toBe(2);
+
+    payload.archivedNotes.forEach((note: any) => {
+      expect(note.id).toBeString();
+
+      const selectedNote = mockArchivedNotes.find(
+        (n) => n.title === note.title,
+      );
+
+      expect(note.title).toBe(selectedNote?.title);
+      expect(note.body).toBe(selectedNote?.body);
+      expect(note.isArchived).toBe(selectedNote?.isArchived);
+      expect(Date.parse(note.createdAt)).not.toBeNaN();
+      expect(note.updatedAt).toBeNull();
+    });
+
+    mockNotesDB.push(...payload.archivedNotes);
+  });
+
+  test("should return 200 on valid get active note request", async () => {
+    const response = await fetch(`${baseUrl}/notes/active`);
+
+    expect(response.status).toBe(200);
+
+    const payload: any = await response.json();
+
+    expect(payload.activeNotes).toBeArray();
+    expect(payload.activeNotes.length).toBe(2);
+
+    payload.activeNotes.forEach((note: any) => {
+      expect(note.id).toBeString();
+
+      const selectedNote = mockNotesDB.find(
+        (n) => n.id === note.id,
+      );
+
+      expect(note.title).toBe(selectedNote?.title);
+      expect(note.body).toBe(selectedNote?.body);
+      expect(note.isArchived).toBe(selectedNote?.isArchived);
+      expect(Date.parse(note.createdAt)).not.toBeNaN();
+      expect(note.updatedAt).toBeNull();
+    });
+  });
+
+  test("should return 200 on valid note update request", async () => {
     const selectedNoteIdx = Math.floor(
       Math.random() * (mockNotesDB.length - 1 - 0 + 1),
     );
@@ -143,7 +210,7 @@ describe("Notes", () => {
     const payload2: any = await response2.json();
 
     expect(payload2.notes).toBeArray();
-    expect(payload2.notes.length).toBe(2);
+    expect(payload2.notes.length).toBe(mockNotesDB.length);
 
     payload2.notes
       .filter((note: any) => note.id !== mockNotesDB[selectedNoteIdx]?.id)
@@ -162,7 +229,7 @@ describe("Notes", () => {
     mockNotesDB = payload2.notes;
   });
 
-  test("should return 200 on valid book delete request", async () => {
+  test("should return 200 on valid note delete request", async () => {
     const selectedNoteIdx = Math.floor(
       Math.random() * (mockNotesDB.length - 1 - 0 + 1),
     );
@@ -188,7 +255,7 @@ describe("Notes", () => {
     const payload2: any = await response2.json();
 
     expect(payload2.notes).toBeArray();
-    expect(payload2.notes.length).toBe(1);
+    expect(payload2.notes.length).toBe(mockNotesDB.length - 1);
 
     payload2.notes
       .filter((note: any) => note.id !== mockNotesDB[selectedNoteIdx]?.id)
