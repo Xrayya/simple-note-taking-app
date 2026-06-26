@@ -39,14 +39,13 @@ export function AddNoteForm({
         isArchived?: boolean;
       };
     }> => {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_ENDPOINT}/notes`,
-        {
-          headers: { "Content-Type": "application/json" },
-          method: "POST",
-          body: JSON.stringify({ ...newNote }),
-        },
-      );
+      const url = new URL("/notes", import.meta.env.VITE_BACKEND_ENDPOINT);
+
+      const response = await fetch(url, {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: JSON.stringify({ ...newNote }),
+      });
 
       if (!response.ok) {
         const payload = await response.json();
