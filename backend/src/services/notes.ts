@@ -113,7 +113,7 @@ export async function updateNote({
   updatedNoteData,
 }: {
   noteId: ReturnedNoteType["id"];
-  updatedNoteData: InputNoteType;
+  updatedNoteData: Partial<InputNoteType>;
 }): Promise<ReturnedNoteType> {
   const result = await db
     .update(notes)

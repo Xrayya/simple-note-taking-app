@@ -1,13 +1,13 @@
 import { Hono } from "hono";
 import {
-    validateJsonRequest,
-    validateRequest,
+  validateJsonRequest,
+  validateRequest,
 } from "../middlewares/validation";
 import { addNote, deleteNote, getNotes, updateNote } from "../services/notes";
 import {
-    addNoteSchema,
-    getNotesSchema,
-    updateNoteSchema,
+  addNoteSchema,
+  getNotesSchema,
+  updateNoteSchema,
 } from "../validation-schemas/notes";
 
 export const notesRoute = new Hono()
