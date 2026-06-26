@@ -14,7 +14,13 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Download, EllipsisVertical, TrashIcon, Upload } from "lucide-react";
+import {
+  Download,
+  EllipsisVertical,
+  LoaderCircle,
+  TrashIcon,
+  Upload,
+} from "lucide-react";
 import type { ComponentProps } from "react";
 import {
   DropdownMenu,
@@ -155,6 +161,7 @@ export function NoteCard({
               <DropdownMenuGroup>
                 <DropdownMenuLabel>Action</DropdownMenuLabel>
                 <DropdownMenuItem
+                  disabled={archiveUnarchiveNote.isPending}
                   onSelect={() => {
                     archiveUnarchiveNote.mutate();
                   }}
@@ -170,15 +177,22 @@ export function NoteCard({
                       Archive
                     </>
                   )}
+                  {archiveUnarchiveNote.isPending ? (
+                    <LoaderCircle className="ml-auto animate-spin" />
+                  ) : null}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   variant="destructive"
+                  disabled={deleteNote.isPending}
                   onSelect={() => {
                     deleteNote.mutate();
                   }}
                 >
                   <TrashIcon />
                   Delete
+                  {deleteNote.isPending ? (
+                    <LoaderCircle className="ml-auto animate-spin" />
+                  ) : null}
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>

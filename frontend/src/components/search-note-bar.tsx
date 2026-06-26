@@ -1,4 +1,4 @@
-import { SearchIcon, X } from "lucide-react";
+import { LoaderCircle, SearchIcon, X } from "lucide-react";
 import { useEffect, useState, type ComponentProps } from "react";
 import { Field } from "./ui/field";
 import {
@@ -10,12 +10,14 @@ import {
 
 type Props = ComponentProps<typeof Field> & {
   onSearchChange?: (s: string) => void;
+  loading?: boolean;
   resultCount?: number;
 };
 
 export function SearchNoteBar({
   onSearchChange,
   resultCount,
+  loading,
   ...restProps
 }: Props) {
   const [searchString, setSearchString] = useState("");
@@ -36,8 +38,9 @@ export function SearchNoteBar({
         <InputGroupAddon align="inline-start">
           <SearchIcon />
         </InputGroupAddon>
-        {resultCount ? (
+        {resultCount || loading ? (
           <InputGroupAddon align="inline-end">
+            {loading ? <LoaderCircle className="animate-spin" /> : null}
             {resultCount} result
           </InputGroupAddon>
         ) : null}
