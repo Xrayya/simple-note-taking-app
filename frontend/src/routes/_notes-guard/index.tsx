@@ -16,7 +16,7 @@ function Home() {
 
   const { data, isLoading, error } = useQuery(
     queryOptions({
-      queryKey: ["notes", searchString],
+      queryKey: ["notes", { searchString, isArchived: false }],
       // TODO: manipulate initial data
       queryFn: async (): Promise<{
         notes: {
@@ -33,6 +33,8 @@ function Home() {
         if (searchString.length > 0) {
           url.searchParams.set("searchString", searchString);
         }
+
+        url.searchParams.set("isArchived", "false");
 
         const response = await fetch(url);
 
@@ -64,9 +66,7 @@ function Home() {
   };
 
   const handleAddNoteCompleteSubmit = () => {
-    setTimeout(() => {
-      setAddNoteFormShowed(false);
-    }, 1000);
+    setAddNoteFormShowed(false);
   };
 
   return (
@@ -86,28 +86,12 @@ function Home() {
       </section>
 
       <section className="flex flex-1 flex-col gap-4">
-        <h2>Active Note</h2>
         {isLoading ? (
           <div>Loading...</div>
         ) : error ? (
           <div>{error.message}</div>
         ) : (
-          <NoteGrid
-            notes={data?.notes.filter((note) => !note.isArchived) || []}
-          />
-        )}
-      </section>
-
-      <section className="flex flex-1 flex-col gap-4">
-        <h2>Archived Note</h2>
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : error ? (
-          <div>{error.message}</div>
-        ) : (
-          <NoteGrid
-            notes={data?.notes.filter((note) => note.isArchived) || []}
-          />
+          <NoteGrid notes={data?.notes || []} />
         )}
       </section>
     </div>
