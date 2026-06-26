@@ -4,4 +4,8 @@ export type NoteInput = {
   isArchived: boolean;
 };
 
-export type Note = NoteInput & { id: string; createdAt: Date; updatedAt: Date | null };
+export type Note = NoteInput & {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+};

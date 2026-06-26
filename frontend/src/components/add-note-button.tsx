@@ -1,6 +1,6 @@
 import { NotebookPen } from "lucide-react";
-import { Button } from "./ui/button";
 import type { ComponentProps } from "react";
+import { Button } from "./ui/button";
 import { Field } from "./ui/field";
 
 type Props = ComponentProps<typeof Field> & {

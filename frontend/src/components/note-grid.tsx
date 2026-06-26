@@ -1,7 +1,7 @@
+import type { Note } from "#/models/notes.ts";
 import { cn } from "@/lib/utils";
 import type { ComponentProps } from "react";
 import { NoteCard } from "./note-card";
-import type { Note } from "#/models/notes.ts";
 
 type Props = ComponentProps<"div"> & {
   notes: Note[];
