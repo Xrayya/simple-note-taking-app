@@ -1,4 +1,4 @@
-import { eq, gte, ilike, lte, or } from "drizzle-orm";
+import { and, eq, gte, ilike, lte, or } from "drizzle-orm";
 import { db } from "../db/db";
 import { notes } from "../db/schema";
 import { NoteNotFoundError } from "../exceptions/notes";
@@ -69,8 +69,10 @@ export async function getNotes(
 
   if ((continueFilter.body || continueFilter.title) && filter?.searchString) {
     conditions.push(
-      ilike(notes.title, `%${filter.searchString}%`),
-      ilike(notes.body, `%${filter.searchString}%`),
+      or(
+        ilike(notes.title, `%${filter.searchString}%`),
+        ilike(notes.body, `%${filter.searchString}%`),
+      ),
     );
   }
 
@@ -91,7 +93,7 @@ export async function getNotes(
   }
 
   const result = await db.query.notes.findMany({
-    where: conditions.length > 0 ? or(...conditions) : undefined,
+    where: conditions.length > 0 ? and(...conditions) : undefined,
   });
 
   return result;
