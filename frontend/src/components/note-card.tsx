@@ -2,9 +2,9 @@ import type { Note } from "#/models/notes.ts";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -14,8 +14,16 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { LoaderCircle } from "lucide-react";
+import { Download, EllipsisVertical, TrashIcon, Upload } from "lucide-react";
 import type { ComponentProps } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 type Props = ComponentProps<"div"> & Note;
 
@@ -116,51 +124,70 @@ export function NoteCard({
     <Card className={cn("mx-auto w-full", className)} {...restProps}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{`created at: ${createdAt.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })}${updatedAt
-            ? ", last updated: " +
-            updatedAt?.toLocaleDateString("en-US", {
+        <CardDescription>
+          <>
+            {"created at: "}
+            {createdAt.toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
-            })
-            : ""
-          }`}</CardDescription>
+            })}
+          </>
+          {updatedAt ? (
+            <>
+              {", last updated: "}
+              {updatedAt?.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </>
+          ) : null}
+        </CardDescription>
+        <CardAction>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon-xs" className="rounded-full">
+                <EllipsisVertical />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-fit" align="start">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Action</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onSelect={() => {
+                    archiveUnarchiveNote.mutate();
+                  }}
+                >
+                  {isArchived ? (
+                    <>
+                      <Upload />
+                      Unarchived
+                    </>
+                  ) : (
+                    <>
+                      <Download />
+                      Archive
+                    </>
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onSelect={() => {
+                    deleteNote.mutate();
+                  }}
+                >
+                  <TrashIcon />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardAction>
       </CardHeader>
       <CardContent>
         <p>{body}</p>
       </CardContent>
-      <CardFooter className="grid grid-cols-2 gap-2">
-        <Button
-          variant="outline"
-          className="w-full"
-          disabled={archiveUnarchiveNote.isPending}
-          onClick={() => {
-            archiveUnarchiveNote.mutate();
-          }}
-        >
-          {archiveUnarchiveNote.isPending ? (
-            <LoaderCircle className="animate-spin" />
-          ) : null}
-          {isArchived ? "Unarchived" : "Archive"}
-        </Button>
-        <Button
-          variant="destructive"
-          className="w-full"
-          disabled={deleteNote.isPending}
-          onClick={() => {
-            deleteNote.mutate();
-          }}
-        >
-          {deleteNote.isPending ? (
-            <LoaderCircle className="animate-spin" />
-          ) : null}
-          Delete
-        </Button>
-      </CardFooter>
     </Card>
   );
 }
