@@ -171,6 +171,75 @@ describe("Notes", () => {
     });
   });
 
+  test("should return 200 on valid get note with search string request", async () => {
+    const response = await fetch(`${baseUrl}/notes?searchString=Body Test`);
+
+    expect(response.status).toBe(200);
+
+    const payload: any = await response.json();
+
+    expect(payload.notes).toBeArray();
+    expect(payload.notes.length).toBe(3);
+
+    payload.notes.forEach((note: any) => {
+      expect(note.id).toBeString();
+
+      const selectedNote = mockNotesDB.find((n) => n.id === note.id);
+
+      expect(note.title).toBe(selectedNote?.title);
+      expect(note.body).toBe(selectedNote?.body);
+      expect(note.isArchived).toBe(selectedNote?.isArchived);
+      expect(Date.parse(note.createdAt)).not.toBeNaN();
+      expect(note.updatedAt).toBeNull();
+    });
+  });
+
+  test("should return 200 on valid get note with another (2nd) search string request", async () => {
+    const response = await fetch(`${baseUrl}/notes?searchString=slk`);
+
+    expect(response.status).toBe(200);
+
+    const payload: any = await response.json();
+
+    expect(payload.notes).toBeArray();
+    expect(payload.notes.length).toBe(2);
+
+    payload.notes.forEach((note: any) => {
+      expect(note.id).toBeString();
+
+      const selectedNote = mockNotesDB.find((n) => n.id === note.id);
+
+      expect(note.title).toBe(selectedNote?.title);
+      expect(note.body).toBe(selectedNote?.body);
+      expect(note.isArchived).toBe(selectedNote?.isArchived);
+      expect(Date.parse(note.createdAt)).not.toBeNaN();
+      expect(note.updatedAt).toBeNull();
+    });
+  });
+
+  test("should return 200 on valid get note with another (3nd) search string request", async () => {
+    const response = await fetch(`${baseUrl}/notes?searchString=100`);
+
+    expect(response.status).toBe(200);
+
+    const payload: any = await response.json();
+
+    expect(payload.notes).toBeArray();
+    expect(payload.notes.length).toBe(1);
+
+    payload.notes.forEach((note: any) => {
+      expect(note.id).toBeString();
+
+      const selectedNote = mockNotesDB.find((n) => n.id === note.id);
+
+      expect(note.title).toBe(selectedNote?.title);
+      expect(note.body).toBe(selectedNote?.body);
+      expect(note.isArchived).toBe(selectedNote?.isArchived);
+      expect(Date.parse(note.createdAt)).not.toBeNaN();
+      expect(note.updatedAt).toBeNull();
+    });
+  });
+
   test("should return 200 on valid note update request", async () => {
     const selectedNoteIdx = Math.floor(
       Math.random() * (mockNotesDB.length - 1 - 0 + 1),
