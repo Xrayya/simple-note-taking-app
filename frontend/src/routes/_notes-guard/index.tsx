@@ -1,5 +1,5 @@
 import { AddNoteButton } from "#/components/add-note-button.tsx";
-import { SearchAddNote } from "#/components/search-note-bar.tsx";
+import { SearchNoteBar } from "#/components/search-note-bar.tsx";
 import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
 import { AddNoteForm } from "@/components/add-note-form";
 import { NoteGrid } from "@/components/note-grid";
@@ -74,7 +74,12 @@ function Home() {
       <section className="flex flex-1 flex-col gap-4">
         <FieldSet className="w-full">
           <FieldGroup className="flex flex-row gap-4">
-            <SearchAddNote onSearchChange={handleSearchChange} />
+            <SearchNoteBar
+              resultCount={
+                searchString.length > 0 ? data?.notes.length : undefined
+              }
+              onSearchChange={handleSearchChange}
+            />
             <AddNoteButton onNewNoteButtonClick={handleNewNoteButtonClick} />
           </FieldGroup>
         </FieldSet>
@@ -90,6 +95,8 @@ function Home() {
           <div>Loading...</div>
         ) : error ? (
           <div>{error.message}</div>
+        ) : data?.notes.length === 0 ? (
+          <div>No Notes</div>
         ) : (
           <NoteGrid
             notes={

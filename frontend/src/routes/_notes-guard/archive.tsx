@@ -1,5 +1,5 @@
 import { NoteGrid } from "#/components/note-grid.tsx";
-import { SearchAddNote } from "#/components/search-note-bar.tsx";
+import { SearchNoteBar } from "#/components/search-note-bar.tsx";
 import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -60,7 +60,12 @@ function RouteComponent() {
       <section className="flex flex-1 flex-col gap-4">
         <FieldSet className="w-full">
           <FieldGroup className="flex flex-row gap-4">
-            <SearchAddNote onSearchChange={handleSearchChange} />
+            <SearchNoteBar
+              resultCount={
+                searchString.length > 0 ? data?.notes.length : undefined
+              }
+              onSearchChange={handleSearchChange}
+            />
           </FieldGroup>
         </FieldSet>
       </section>

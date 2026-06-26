@@ -1,5 +1,5 @@
 import { SearchIcon, X } from "lucide-react";
-import type { ComponentProps } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 import { Field } from "./ui/field";
 import {
   InputGroup,
@@ -8,25 +8,45 @@ import {
   InputGroupInput,
 } from "./ui/input-group";
 
-type Props = ComponentProps<"fieldset"> & {
+type Props = ComponentProps<typeof Field> & {
   onSearchChange?: (s: string) => void;
+  resultCount?: number;
 };
 
-export function SearchAddNote({ onSearchChange }: Props) {
+export function SearchNoteBar({
+  onSearchChange,
+  resultCount,
+  ...restProps
+}: Props) {
+  const [searchString, setSearchString] = useState("");
+
+  useEffect(() => {
+    onSearchChange?.(searchString);
+  }, [searchString, onSearchChange]);
+
   return (
-    <Field>
+    <Field {...restProps}>
       <InputGroup>
         <InputGroupInput
           id="search-note"
           placeholder="Search Note..."
-          onChange={(e) => onSearchChange?.(e.target.value)}
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
         />
         <InputGroupAddon align="inline-start">
           <SearchIcon />
         </InputGroupAddon>
-        <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
+        {resultCount ? (
+          <InputGroupAddon align="inline-end">
+            {resultCount} result
+          </InputGroupAddon>
+        ) : null}
         <InputGroupAddon align="inline-end">
-          <InputGroupButton variant="secondary" type="button">
+          <InputGroupButton
+            variant="secondary"
+            type="button"
+            onClick={() => setSearchString("")}
+          >
             <X />
           </InputGroupButton>
         </InputGroupAddon>
