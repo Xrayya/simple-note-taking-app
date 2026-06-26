@@ -1,23 +1,22 @@
 import { Hono } from "hono";
-import { validateJsonRequest } from "../middlewares/validation";
+import {
+  validateJsonRequest,
+  validateRequest,
+} from "../middlewares/validation";
 import { addNote, deleteNote, getNotes, updateNote } from "../services/notes";
-import { addNoteSchema, updateNoteSchema } from "../validation-schemas/notes";
+import {
+  addNoteSchema,
+  getNotesSchema,
+  updateNoteSchema,
+} from "../validation-schemas/notes";
 
 export const notesRoute = new Hono()
-  .get("/", async (c) => {
-    const notes = await getNotes();
+  .get("/", ...validateRequest(getNotesSchema), async (c) => {
+    const filters = c.req.valid("query");
+
+    const notes = await getNotes(filters);
 
     return c.json({ notes }, 200);
-  })
-  .get("/active", async (c) => {
-    const activeNotes = await getNotes({ isArchived: false });
-
-    return c.json({ activeNotes }, 200);
-  })
-  .get("/archived", async (c) => {
-    const archivedNotes = await getNotes({ isArchived: true });
-
-    return c.json({ archivedNotes }, 200);
   })
   .post("/", ...validateJsonRequest(addNoteSchema), async (c) => {
     const newNoteData = c.req.valid("json");
