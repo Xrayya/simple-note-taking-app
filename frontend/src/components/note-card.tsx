@@ -31,7 +31,10 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-type Props = ComponentProps<"div"> & Note;
+type Props = ComponentProps<"div"> &
+  Note & {
+    onCardClick?: (noteId: Note["id"]) => void;
+  };
 
 export function NoteCard({
   id,
@@ -41,6 +44,7 @@ export function NoteCard({
   createdAt,
   updatedAt,
   className,
+  onCardClick,
   ...restProps
 }: Props) {
   const queryClient = useQueryClient();
@@ -127,7 +131,14 @@ export function NoteCard({
   });
 
   return (
-    <Card className={cn("mx-auto w-full", className)} {...restProps}>
+    <Card
+      className={cn(
+        "mx-auto w-full transition-all scale-100 hover:scale-105",
+        className,
+      )}
+      {...restProps}
+      onClick={() => onCardClick?.(id)}
+    >
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>
