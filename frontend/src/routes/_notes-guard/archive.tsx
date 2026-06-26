@@ -26,7 +26,7 @@ function RouteComponent() {
           isArchived: boolean;
         }[];
       }> => {
-        const url = new URL("/notes", import.meta.env.VITE_BACKEND_ENDPOINT!);
+        const url = new URL("/api/notes", window.location.origin);
 
         if (searchString.length > 0) {
           url.searchParams.set("searchString", searchString);

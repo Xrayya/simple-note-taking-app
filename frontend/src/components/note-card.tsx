@@ -60,10 +60,7 @@ export function NoteCard({
         isArchived?: boolean;
       };
     }> => {
-      const url = new URL(
-        `/notes/${id}`,
-        import.meta.env.VITE_BACKEND_ENDPOINT,
-      );
+      const url = new URL(`/api/notes/${id}`, window.location.origin);
 
       const response = await fetch(url, {
         headers: { "Content-Type": "application/json" },
@@ -99,10 +96,7 @@ export function NoteCard({
         title: string;
       };
     }> => {
-      const url = new URL(
-        `/notes/${id}`,
-        import.meta.env.VITE_BACKEND_ENDPOINT,
-      );
+      const url = new URL(`/api/notes/${id}`, window.location.origin);
 
       const response = await fetch(url, {
         headers: { "Content-Type": "application/json" },
