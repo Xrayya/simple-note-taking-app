@@ -62,9 +62,9 @@ export const addNoteSchema = new BaseRequestSchema({
 
 export const updateNoteSchema = new BaseRequestSchema({
   jsonSchema: z.object({
-    title: z.string().min(1).max(500),
-    body: z.string().min(1).max(4000),
-    isArchived: z.boolean().optional(),
+    title: z.string().min(1).max(500).optional(),
+    body: z.string().min(1).max(4000).optional(),
+    isArchived: z.boolean().optional().optional(),
   }),
   cookieSchema: z.object({}),
   formSchema: z.object({}),
