@@ -21,7 +21,8 @@ app.get("/", (c) => {
 app.route("/notes", notesRoute);
 
 app.onError((err, c) => {
-  console.log(err)
+  console.log(err);
+
   if (err instanceof HTTPException) {
     return c.json(
       { error: { name: err.name, message: err.message } },
@@ -30,6 +31,8 @@ app.onError((err, c) => {
   }
 
   if (err instanceof InvalidRequestError) {
+    console.log("traces", err.traces);
+
     return c.json(
       { error: { name: err.name, message: err.message, traces: err.traces } },
       err.statusCode,
