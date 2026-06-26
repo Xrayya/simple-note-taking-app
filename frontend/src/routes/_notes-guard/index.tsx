@@ -1,6 +1,8 @@
+import { AddNoteButton } from "#/components/add-note-button.tsx";
+import { SearchAddNote } from "#/components/search-note-bar.tsx";
+import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
 import { AddNoteForm } from "@/components/add-note-form";
 import { NoteGrid } from "@/components/note-grid";
-import { SearchAddNote } from "@/components/search-add-note";
 import { cn } from "@/lib/utils";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -70,10 +72,12 @@ function Home() {
   return (
     <div className="flex flex-1 flex-col gap-8">
       <section className="flex flex-1 flex-col gap-4">
-        <SearchAddNote
-          onNewNoteButtonClick={handleNewNoteButtonClick}
-          onSearchChange={handleSearchChange}
-        />
+        <FieldSet className="w-full">
+          <FieldGroup className="flex flex-row gap-4">
+            <SearchAddNote onSearchChange={handleSearchChange} />
+            <AddNoteButton onNewNoteButtonClick={handleNewNoteButtonClick} />
+          </FieldGroup>
+        </FieldSet>
         <AddNoteForm
           className={cn(isAddNoteFormShowed ? null : "hidden")}
           onCompleteSubmit={handleAddNoteCompleteSubmit}
