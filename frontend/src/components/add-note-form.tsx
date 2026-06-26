@@ -101,7 +101,7 @@ export function AddNoteForm({
             selector={(state) => [state.canSubmit, state.isSubmitting]}
           >
             {([canSubmit, isSubmitting]) => (
-              <FieldSet className="my-4 w-full">
+              <FieldSet className="w-full">
                 <FieldGroup>
                   <form.Field name="title">
                     {(field) => (

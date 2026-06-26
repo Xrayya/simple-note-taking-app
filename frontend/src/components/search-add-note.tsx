@@ -20,7 +20,7 @@ export function SearchAddNote({
   ...restProps
 }: Props) {
   return (
-    <FieldSet {...restProps} className="my-4 w-full">
+    <FieldSet {...restProps} className="w-full">
       <FieldGroup className="flex flex-row gap-4">
         <Field>
           <InputGroup>

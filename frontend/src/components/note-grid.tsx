@@ -11,7 +11,7 @@ export function NoteGrid({ notes, className, ...restProps }: Props) {
   return (
     <div
       className={cn(
-        "grid gap-4 grid-cols-[repeat(auto-fill,minmax(24rem,1fr))]",
+        "grid gap-4 grid-cols-[repeat(auto-fill,minmax(20rem,1fr))]",
         className,
         { ...restProps },
       )}
