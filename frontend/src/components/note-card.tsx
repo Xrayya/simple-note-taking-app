@@ -1,3 +1,4 @@
+import type { Note } from "#/models/notes.ts";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Note } from "@/contexts/notes-context";
 import { cn } from "@/lib/utils";
 import {
   queryOptions,
@@ -24,6 +24,8 @@ export function NoteCard({
   title,
   body,
   isArchived,
+  createdAt,
+  updatedAt,
   className,
   ...restProps
 }: Props) {
@@ -40,7 +42,10 @@ export function NoteCard({
         isArchived?: boolean;
       };
     }> => {
-      const url = new URL(`/notes/${id}`, import.meta.env.VITE_BACKEND_ENDPOINT);
+      const url = new URL(
+        `/notes/${id}`,
+        import.meta.env.VITE_BACKEND_ENDPOINT,
+      );
 
       const response = await fetch(url, {
         headers: { "Content-Type": "application/json" },
@@ -76,7 +81,10 @@ export function NoteCard({
         title: string;
       };
     }> => {
-      const url = new URL(`/notes/${id}`, import.meta.env.VITE_BACKEND_ENDPOINT);
+      const url = new URL(
+        `/notes/${id}`,
+        import.meta.env.VITE_BACKEND_ENDPOINT,
+      );
 
       const response = await fetch(url, {
         headers: { "Content-Type": "application/json" },
@@ -108,9 +116,19 @@ export function NoteCard({
     <Card className={cn("mx-auto w-full", className)} {...restProps}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>
-          created at: to be implemented, updated at: to be implemented
-        </CardDescription>
+        <CardDescription>{`created at: ${createdAt.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })}${updatedAt
+            ? ", last updated: " +
+            updatedAt?.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })
+            : ""
+          }`}</CardDescription>
       </CardHeader>
       <CardContent>
         <p>{body}</p>

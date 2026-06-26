@@ -73,7 +73,15 @@ function RouteComponent() {
         ) : data?.notes.length === 0 ? (
           <div>No Notes</div>
         ) : (
-          <NoteGrid notes={data?.notes || []} />
+          <NoteGrid
+            notes={
+              data?.notes.map(({ createdAt, updatedAt, ...rest }) => ({
+                createdAt: new Date(createdAt),
+                updatedAt: updatedAt ? new Date(updatedAt) : null,
+                ...rest,
+              })) || []
+            }
+          />
         )}
       </section>
     </div>
