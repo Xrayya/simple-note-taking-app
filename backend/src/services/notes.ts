@@ -1,4 +1,4 @@
-import { and, eq, gte, ilike, lte, or } from "drizzle-orm";
+import { eq, gte, ilike, lte, or } from "drizzle-orm";
 import { db } from "../db/db";
 import { notes } from "../db/schema";
 import { NoteNotFoundError } from "../exceptions/notes";
