@@ -1,4 +1,4 @@
-import { and, eq, gte, ilike, lte } from "drizzle-orm";
+import { and, eq, gte, ilike, lte, or } from "drizzle-orm";
 import { db } from "../db/db";
 import { notes } from "../db/schema";
 import { NoteNotFoundError } from "../exceptions/notes";
@@ -91,7 +91,7 @@ export async function getNotes(
   }
 
   const result = await db.query.notes.findMany({
-    where: conditions.length > 0 ? and(...conditions) : undefined,
+    where: conditions.length > 0 ? or(...conditions) : undefined,
   });
 
   return result;
