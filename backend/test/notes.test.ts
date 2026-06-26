@@ -122,16 +122,16 @@ describe("Notes", () => {
   test("should return 200 on valid get archived note request", async () => {
     await db.insert(notes).values(mockArchivedNotes);
 
-    const response = await fetch(`${baseUrl}/notes/archived`);
+    const response = await fetch(`${baseUrl}/notes?isArchived=true`);
 
     expect(response.status).toBe(200);
 
     const payload: any = await response.json();
 
-    expect(payload.archivedNotes).toBeArray();
-    expect(payload.archivedNotes.length).toBe(2);
+    expect(payload.notes).toBeArray();
+    expect(payload.notes.length).toBe(2);
 
-    payload.archivedNotes.forEach((note: any) => {
+    payload.notes.forEach((note: any) => {
       expect(note.id).toBeString();
 
       const selectedNote = mockArchivedNotes.find(
@@ -145,25 +145,23 @@ describe("Notes", () => {
       expect(note.updatedAt).toBeNull();
     });
 
-    mockNotesDB.push(...payload.archivedNotes);
+    mockNotesDB.push(...payload.notes);
   });
 
   test("should return 200 on valid get active note request", async () => {
-    const response = await fetch(`${baseUrl}/notes/active`);
+    const response = await fetch(`${baseUrl}/notes?isArchived=false`);
 
     expect(response.status).toBe(200);
 
     const payload: any = await response.json();
 
-    expect(payload.activeNotes).toBeArray();
-    expect(payload.activeNotes.length).toBe(2);
+    expect(payload.notes).toBeArray();
+    expect(payload.notes.length).toBe(2);
 
-    payload.activeNotes.forEach((note: any) => {
+    payload.notes.forEach((note: any) => {
       expect(note.id).toBeString();
 
-      const selectedNote = mockNotesDB.find(
-        (n) => n.id === note.id,
-      );
+      const selectedNote = mockNotesDB.find((n) => n.id === note.id);
 
       expect(note.title).toBe(selectedNote?.title);
       expect(note.body).toBe(selectedNote?.body);
