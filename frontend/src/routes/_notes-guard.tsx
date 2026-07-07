@@ -13,6 +13,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "#/components/ui/sidebar.tsx";
 import { useIsMobile } from "#/hooks/use-mobile.ts";
 import { cn } from "#/lib/utils.ts";
@@ -23,16 +24,28 @@ export const Route = createFileRoute("/_notes-guard")({
   component: RouteComponent,
 });
 
-function RouteComponent() {
+function RouteLayout() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const isMobile = useIsMobile();
+
+  const { setOpen } = useSidebar();
+
+  if (isDrawerOpen && window.innerWidth <= 1056) {
+    setOpen(false);
+  }
+
+  window.addEventListener("resize", () => {
+    if (isDrawerOpen && window.innerWidth <= 1056) {
+      setOpen(false);
+    }
+  });
 
   const handleDrawerOpenChange = (nextOpen: boolean) => {
     setIsDrawerOpen(nextOpen);
   };
 
   return (
-    <SidebarProvider>
+    <>
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -59,13 +72,21 @@ function RouteComponent() {
             "@container/main transition-all duration-250 px-8 xl:px-32",
             !isMobile && isDrawerOpen
               ? "xl:pr-130 md:pr-106"
-              : "xl:pr-32 md:pr-8", // FIXME: awkward layout in small md viewport
+              : "xl:pr-32 md:pr-8",
           )}
         >
           <Outlet />
           <NoteDetailDrawer onOpenChange={handleDrawerOpenChange} />
         </div>
       </SidebarInset>
+    </>
+  );
+}
+
+function RouteComponent() {
+  return (
+    <SidebarProvider>
+      <RouteLayout />
     </SidebarProvider>
   );
 }
