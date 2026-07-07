@@ -1,7 +1,5 @@
-"use client";
-
+import { noteListOption, useNote } from "#/hooks/use-notes.ts";
 import { formatTimestamp } from "#/lib/utils.ts";
-import type { Note } from "#/models/notes.ts";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -15,7 +13,7 @@ import {
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer";
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ComponentProps } from "react";
 import { Skeleton } from "./ui/skeleton";
 
@@ -36,32 +34,15 @@ export function NoteDetailDrawerTrigger(props: NoteDetailDrawerTriggerProps) {
 }
 
 function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
-  const { data, isLoading, error } = useQuery(
-    queryOptions({
-      queryKey: ["notes", { id: noteId }],
-      // TODO: manipulate initial data
-      queryFn: async (): Promise<{
-        note: Note;
-      }> => {
-        const url = new URL(`/api/notes`, window.location.origin);
-        url.searchParams.set("id", noteId);
+  const queryClient = useQueryClient();
 
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          const payload = await response.json();
-
-          throw new Error(
-            payload?.error?.message || "An error occurred while fetching data",
-            { cause: payload?.error?.name },
-          );
-        }
-
-        const payload = await response.json();
-        return { note: payload.notes[0] };
-      },
-    }),
-  );
+  const { data, isLoading, error } = useNote({ id: noteId }, () => {
+    return (
+      queryClient
+        .getQueryData(noteListOption().queryKey)
+        ?.filter((data) => data.id === noteId) || []
+    );
+  });
 
   if (!data) {
     if (isLoading) {
@@ -113,27 +94,39 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
     );
   }
 
+  if (data.length === 0) {
+    return (
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Something Unexpected Happened...</DrawerTitle>
+        </DrawerHeader>
+        <div className="p-4">No Data Provided</div>
+        <DrawerFooter>
+          <DrawerClose render={<Button variant="outline">Cancel</Button>} />
+        </DrawerFooter>
+      </DrawerContent>
+    );
+  }
+
   return (
     <DrawerContent>
       <DrawerHeader>
         <DrawerTitle>
           <input
-            value={data.note.title}
+            value={data[0].title}
             className="size-full border-none bg-transparent text-inherit placeholder-white/60 outline-none"
           />
         </DrawerTitle>
         <DrawerDescription>
           {formatTimestamp({
-            createdAt: new Date(data.note.createdAt),
-            updatedAt: data.note.updatedAt
-              ? new Date(data.note.updatedAt)
-              : null,
+            createdAt: new Date(data[0].createdAt),
+            updatedAt: data[0].updatedAt ? new Date(data[0].updatedAt) : null,
           })}
         </DrawerDescription>
       </DrawerHeader>
       <div className="p-4">
         <textarea
-          value={data.note.body}
+          value={data[0].body}
           className="size-full border-none bg-transparent text-inherit placeholder-white/60 outline-none"
         />
       </div>

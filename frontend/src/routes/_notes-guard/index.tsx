@@ -2,10 +2,11 @@ import { AddNoteButton } from "#/components/add-note-button.tsx";
 import { NoteDetailDrawer } from "#/components/note-detail.tsx";
 import { SearchNoteBar } from "#/components/search-note-bar.tsx";
 import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
+import { noteListOption, useNote } from "#/hooks/use-notes.ts";
 import { AddNoteForm } from "@/components/add-note-form";
 import { NoteGrid } from "@/components/note-grid";
 import { cn } from "@/lib/utils";
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -15,43 +16,25 @@ function Home() {
   const [isAddNoteFormShowed, setAddNoteFormShowed] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string>("");
 
-  const { data, isLoading, error } = useQuery(
-    queryOptions({
-      queryKey: ["notes", { searchString, isArchived: false }],
-      // TODO: manipulate initial data
-      queryFn: async (): Promise<{
-        notes: {
-          id: string;
-          createdAt: string;
-          updatedAt: string | null;
-          title: string;
-          body: string;
-          isArchived: boolean;
-        }[];
-      }> => {
-        const url = new URL("/api/notes", window.location.origin);
+  const queryClient = useQueryClient();
 
-        if (searchString.length > 0) {
-          url.searchParams.set("searchString", searchString);
-        }
-
-        url.searchParams.set("isArchived", "false");
-
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          const payload = await response.json();
-
-          throw new Error(
-            payload?.error?.message || "An error occurred while fetching data",
-            { cause: payload?.error?.name },
-          );
-        }
-
-        const payload = await response.json();
-        return payload;
-      },
-    }),
+  const { data, isLoading, error } = useNote(
+    {
+      searchString,
+      isArchived: false,
+    },
+    () => {
+      return (
+        queryClient
+          .getQueryData(noteListOption().queryKey)
+          ?.filter(
+            (data) =>
+              data.isArchived === false &&
+              (data.title.includes(searchString) ||
+                data.body.includes(searchString)),
+          ) || []
+      );
+    },
   );
 
   const handleNewNoteButtonClick = () => {
@@ -77,9 +60,7 @@ function Home() {
         <FieldSet className="w-full">
           <FieldGroup className="flex flex-row gap-4">
             <SearchNoteBar
-              resultCount={
-                searchString.length > 0 ? data?.notes.length : undefined
-              }
+              resultCount={searchString.length > 0 ? data?.length : undefined}
               onSearchChange={handleSearchChange}
             />
             <AddNoteButton onNewNoteButtonClick={handleNewNoteButtonClick} />
@@ -97,12 +78,12 @@ function Home() {
           <div>Loading...</div>
         ) : error ? (
           <div>{error.message}</div>
-        ) : data?.notes.length === 0 ? (
+        ) : data?.length === 0 ? (
           <div>No Notes</div>
         ) : (
           <NoteGrid
             notes={
-              data?.notes.map(({ createdAt, updatedAt, ...rest }) => ({
+              data?.map(({ createdAt, updatedAt, ...rest }) => ({
                 createdAt: new Date(createdAt),
                 updatedAt: updatedAt ? new Date(updatedAt) : null,
                 ...rest,

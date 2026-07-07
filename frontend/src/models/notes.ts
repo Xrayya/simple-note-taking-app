@@ -9,3 +9,13 @@ export type Note = NoteInput & {
   createdAt: Date;
   updatedAt: Date | null;
 };
+
+export type NoteFilter = Partial<
+  Note & {
+    searchString: string;
+    createdAtFrom: Date;
+    createdAtUntil: Date;
+    updatedAtFrom: Date;
+    updatedAtUntil: Date;
+  }
+>;
