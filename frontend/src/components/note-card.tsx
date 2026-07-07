@@ -50,16 +50,7 @@ export function NoteCard({
   const queryClient = useQueryClient();
 
   const archiveUnarchiveNote = useMutation({
-    mutationFn: async (): Promise<{
-      newNote: {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date | null;
-        title: string;
-        body: string;
-        isArchived?: boolean;
-      };
-    }> => {
+    mutationFn: async (): Promise<Note> => {
       const url = new URL(`/api/notes/${id}`, window.location.origin);
 
       const response = await fetch(url, {
@@ -78,7 +69,7 @@ export function NoteCard({
       }
 
       const payload = await response.json();
-      return payload;
+      return payload.updatedNote;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
@@ -91,10 +82,8 @@ export function NoteCard({
 
   const deleteNote = useMutation({
     mutationFn: async (): Promise<{
-      newNote: {
-        id: string;
-        title: string;
-      };
+      id: string;
+      title: string;
     }> => {
       const url = new URL(`/api/notes/${id}`, window.location.origin);
 
@@ -113,7 +102,7 @@ export function NoteCard({
       }
 
       const payload = await response.json();
-      return payload;
+      return payload.deletedNote;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(

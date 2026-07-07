@@ -76,7 +76,7 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
       }
 
       const payload = await response.json();
-      return payload;
+      return payload.updatedNote;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
