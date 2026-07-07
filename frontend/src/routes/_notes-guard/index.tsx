@@ -1,5 +1,5 @@
 import { AddNoteButton } from "#/components/add-note-button.tsx";
-import { NoteDetailDrawer } from "#/components/note-detail-drawer.tsx";
+import { NoteDetailDrawer } from "#/components/note-detail.tsx";
 import { SearchNoteBar } from "#/components/search-note-bar.tsx";
 import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
 import { AddNoteForm } from "@/components/add-note-form";
