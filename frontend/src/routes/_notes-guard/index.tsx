@@ -1,5 +1,4 @@
 import { AddNoteButton } from "#/components/add-note-button.tsx";
-import { NoteDetailDrawer } from "#/components/note-detail.tsx";
 import { SearchNoteBar } from "#/components/search-note-bar.tsx";
 import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
 import { noteListOption, useNote } from "#/hooks/use-notes.ts";
@@ -53,7 +52,6 @@ function Home() {
 
   return (
     <div className="flex flex-1 flex-col gap-8">
-      <NoteDetailDrawer />
       <section className="flex flex-1 flex-col gap-4">
         <FieldSet className="w-full">
           <FieldGroup className="flex flex-row gap-4">

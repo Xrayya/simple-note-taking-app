@@ -1,4 +1,5 @@
 import { AppSidebar } from "#/components/app-sidebar.tsx";
+import { NoteDetailDrawer } from "#/components/note-detail.tsx";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -44,6 +45,7 @@ function RouteComponent() {
           </div>
         </header>
         <div className="@container/main px-8 xl:px-32">
+          <NoteDetailDrawer />
           <Outlet />
         </div>
       </SidebarInset>
