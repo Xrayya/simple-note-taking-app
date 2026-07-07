@@ -35,19 +35,7 @@ export function NoteDetailDrawerTrigger(props: NoteDetailDrawerTriggerProps) {
   return <DrawerTrigger {...props} handle={noteDetailDrawerHandler} />;
 }
 
-function NoteDetailDrawerContent({ noteId }: Partial<NoteDetailDrawerPayload>) {
-  if (!noteId) {
-    <DrawerContent>
-      <DrawerHeader>
-        <DrawerTitle>Something Unexpected Happened...</DrawerTitle>
-      </DrawerHeader>
-      <div className="p-4">No Data Provided</div>
-      <DrawerFooter>
-        <DrawerClose render={<Button variant="outline">Cancel</Button>} />
-      </DrawerFooter>
-    </DrawerContent>;
-  }
-
+function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
   const { data, isLoading, error } = useQuery(
     queryOptions({
       queryKey: ["notes", { id: noteId }],
@@ -55,7 +43,8 @@ function NoteDetailDrawerContent({ noteId }: Partial<NoteDetailDrawerPayload>) {
       queryFn: async (): Promise<{
         note: Note;
       }> => {
-        const url = new URL(`/api/notes/${noteId}`, window.location.origin);
+        const url = new URL(`/api/notes`, window.location.origin);
+        url.searchParams.set("id", noteId);
 
         const response = await fetch(url);
 
@@ -69,7 +58,7 @@ function NoteDetailDrawerContent({ noteId }: Partial<NoteDetailDrawerPayload>) {
         }
 
         const payload = await response.json();
-        return payload;
+        return { note: payload.notes[0] };
       },
     }),
   );
@@ -129,14 +118,16 @@ function NoteDetailDrawerContent({ noteId }: Partial<NoteDetailDrawerPayload>) {
       <DrawerHeader>
         <DrawerTitle>
           <input
-            value={data?.note.title}
+            value={data.note.title}
             className="size-full border-none bg-transparent text-inherit placeholder-white/60 outline-none"
           />
         </DrawerTitle>
         <DrawerDescription>
           {formatTimestamp({
-            createdAt: data.note.createdAt,
-            updatedAt: data.note.updatedAt,
+            createdAt: new Date(data.note.createdAt),
+            updatedAt: data.note.updatedAt
+              ? new Date(data.note.updatedAt)
+              : null,
           })}
         </DrawerDescription>
       </DrawerHeader>
@@ -169,11 +160,23 @@ export function NoteDetailDrawer({ ...props }: NoteDetailDrawerProps) {
       handle={noteDetailDrawerHandler}
       {...props}
     >
-      {({ payload }) => (
-        <NoteDetailDrawerContent
-          noteId={(payload as Partial<NoteDetailDrawerPayload>)?.noteId}
-        />
-      )}
+      {({ payload }) =>
+        payload ? (
+          <NoteDetailDrawerContent
+            noteId={(payload as NoteDetailDrawerPayload).noteId}
+          />
+        ) : (
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Something Unexpected Happened...</DrawerTitle>
+            </DrawerHeader>
+            <div className="p-4">No Data Provided</div>
+            <DrawerFooter>
+              <DrawerClose render={<Button variant="outline">Cancel</Button>} />
+            </DrawerFooter>
+          </DrawerContent>
+        )
+      }
     </Drawer>
   );
 }
