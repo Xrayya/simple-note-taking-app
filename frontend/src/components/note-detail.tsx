@@ -200,18 +200,16 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
               </DrawerDescription>
             </DrawerHeader>
             <div className="p-4">
-              <form.Field name="title">
+              <form.Field name="body">
                 {(field) => (
-                  <DrawerTitle>
-                    <textarea
-                      name={field.name}
-                      value={field.state.value}
-                      disabled={isSubmitting}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      className="size-full border-none bg-transparent text-inherit placeholder-white/60 outline-none"
-                    />
-                  </DrawerTitle>
+                  <textarea
+                    name={field.name}
+                    value={field.state.value}
+                    disabled={isSubmitting}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="size-full border-none bg-transparent text-inherit placeholder-white/60 outline-none"
+                  />
                 )}
               </form.Field>
             </div>
