@@ -13,9 +13,18 @@ import {
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer";
-import { useQueryClient } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useState, type ComponentProps } from "react";
 import { Skeleton } from "./ui/skeleton";
+import { useForm } from "@tanstack/react-form";
+import { updateNoteContentSchema } from "#/schema-validation/notes.ts";
+import type { Note } from "#/models/notes.ts";
+import type { z } from "zod";
+import { LoaderCircle } from "lucide-react";
 
 export type NoteDetailDrawerPayload = {
   noteId: string;
@@ -36,12 +45,59 @@ export function NoteDetailDrawerTrigger(props: NoteDetailDrawerTriggerProps) {
 function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useNote({ id: noteId }, () => {
+  const { data, isLoading, error } = useNote({ id: noteId }, (() => {
+
     return (
       queryClient
         .getQueryData(noteListOption().queryKey)
         ?.filter((data) => data.id === noteId) || []
     );
+  }));
+
+  const updateNoteContent = useMutation({
+    mutationFn: async (
+      updatedNoteContent: z.infer<typeof updateNoteContentSchema>,
+    ): Promise<Note> => {
+      const url = new URL(`/api/notes/${noteId}`, window.location.origin);
+
+      const response = await fetch(url, {
+        headers: { "Content-Type": "application/json" },
+        method: "PUT",
+        body: JSON.stringify({ ...updatedNoteContent }),
+      });
+
+      if (!response.ok) {
+        const payload = await response.json();
+
+        throw new Error(
+          payload?.error?.message || "An error occurred while fetching data",
+          { cause: payload?.error?.name },
+        );
+      }
+
+      const payload = await response.json();
+      return payload;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(
+        queryOptions({
+          queryKey: ["notes"],
+        }),
+      );
+    },
+  });
+
+  const form = useForm({
+    defaultValues: {
+      title: data && data.length !== 0 ? data[0].title : "",
+      body: data && data.length !== 0 ? data[0].body : "",
+    },
+    validators: {
+      onChange: updateNoteContentSchema,
+    },
+    onSubmit: ({ value }) => {
+      updateNoteContent.mutate({ ...value });
+    },
   });
 
   if (!data) {
@@ -109,32 +165,81 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
   }
 
   return (
-    <DrawerContent>
-      <DrawerHeader>
-        <DrawerTitle>
-          <input
-            value={data[0].title}
-            className="size-full border-none bg-transparent text-inherit placeholder-white/60 outline-none"
-          />
-        </DrawerTitle>
-        <DrawerDescription>
-          {formatTimestamp({
-            createdAt: new Date(data[0].createdAt),
-            updatedAt: data[0].updatedAt ? new Date(data[0].updatedAt) : null,
-          })}
-        </DrawerDescription>
-      </DrawerHeader>
-      <div className="p-4">
-        <textarea
-          value={data[0].body}
-          className="size-full border-none bg-transparent text-inherit placeholder-white/60 outline-none"
-        />
-      </div>
-      <DrawerFooter>
-        <Button className="h-8.5">Save</Button>
-        <DrawerClose render={<Button variant="outline">Cancel</Button>} />
-      </DrawerFooter>
-    </DrawerContent>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+    >
+      <form.Subscribe
+        selector={(state) => [state.canSubmit, state.isSubmitting]}
+      >
+        {([canSubmit, isSubmitting]) => (
+          <DrawerContent>
+            <DrawerHeader>
+              <form.Field name="title">
+                {(field) => (
+                  <DrawerTitle>
+                    <input
+                      type="text"
+                      name={field.name}
+                      value={field.state.value}
+                      disabled={isSubmitting}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="size-full border-none bg-transparent text-inherit placeholder-white/60 outline-none"
+                    />
+                  </DrawerTitle>
+                )}
+              </form.Field>
+              <DrawerDescription>
+                {formatTimestamp({
+                  createdAt: new Date(data[0].createdAt),
+                  updatedAt: data[0].updatedAt
+                    ? new Date(data[0].updatedAt)
+                    : null,
+                })}
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="p-4">
+              <form.Field name="title">
+                {(field) => (
+                  <DrawerTitle>
+                    <textarea
+                      name={field.name}
+                      value={field.state.value}
+                      disabled={isSubmitting}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="size-full border-none bg-transparent text-inherit placeholder-white/60 outline-none"
+                    />
+                  </DrawerTitle>
+                )}
+              </form.Field>
+            </div>
+            <DrawerFooter>
+              <Button type="submit" disabled={!canSubmit} className="h-8.5">
+                {isSubmitting ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : null}
+                Save
+              </Button>
+              <DrawerClose
+                render={<Button variant="outline">Cancel</Button>}
+                type="reset"
+                disabled={isSubmitting}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  form.reset();
+                }}
+              />
+            </DrawerFooter>
+          </DrawerContent>
+        )}
+      </form.Subscribe>
+    </form>
   );
 }
 
