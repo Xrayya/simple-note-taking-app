@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import type { Note } from "#/models/notes.ts";
 
 type Props = ComponentProps<"div"> & {
   onCancel?: () => void;
@@ -29,16 +30,7 @@ export function AddNoteForm({
   const addNote = useMutation({
     mutationFn: async (
       newNote: z.infer<typeof addNoteSchema>,
-    ): Promise<{
-      newNote: {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date | null;
-        title: string;
-        body: string;
-        isArchived?: boolean;
-      };
-    }> => {
+    ): Promise<Note> => {
       const url = new URL("/api/notes", window.location.origin);
 
       const response = await fetch(url, {
@@ -57,7 +49,7 @@ export function AddNoteForm({
       }
 
       const payload = await response.json();
-      return payload;
+      return payload.newNote;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(
