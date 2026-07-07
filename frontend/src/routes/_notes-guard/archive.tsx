@@ -1,4 +1,3 @@
-import { NoteDetailDrawer } from "#/components/note-detail.tsx";
 import { NoteGrid } from "#/components/note-grid.tsx";
 import { SearchNoteBar } from "#/components/search-note-bar.tsx";
 import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
@@ -39,7 +38,6 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-1 flex-col gap-8">
-      <NoteDetailDrawer />
       <section className="flex flex-1 flex-col gap-4">
         <FieldSet className="w-full">
           <FieldGroup className="flex flex-row gap-4">
