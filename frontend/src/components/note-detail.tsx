@@ -30,7 +30,7 @@ export type NoteDetailDrawerPayload = {
   noteId: string;
 };
 
-const noteDetailDrawerHandler =
+export const noteDetailDrawerHandler =
   DrawerPrimitive.createHandle<NoteDetailDrawerPayload>();
 
 type NoteDetailDrawerTriggerProps = Omit<
@@ -240,17 +240,30 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
 
 type NoteDetailDrawerProps = ComponentProps<typeof Drawer>;
 
-export function NoteDetailDrawer({ ...props }: NoteDetailDrawerProps) {
+export function NoteDetailDrawer({
+  onOpenChange,
+  ...props
+}: NoteDetailDrawerProps) {
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
+
+  const handleOpenChange = (
+    nextOpen: boolean,
+    event: DrawerPrimitive.Root.ChangeEventDetails,
+  ) => {
+    setOpen(nextOpen);
+    onOpenChange?.(nextOpen, event);
+  };
 
   return (
     <Drawer
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={handleOpenChange}
       showSwipeHandle={isMobile}
       swipeDirection={isMobile ? "down" : "right"}
       handle={noteDetailDrawerHandler}
+      modal={false}
+      disablePointerDismissal={true}
       {...props}
     >
       {({ payload }) =>

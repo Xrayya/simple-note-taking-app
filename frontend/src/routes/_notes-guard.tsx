@@ -14,13 +14,23 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "#/components/ui/sidebar.tsx";
+import { useIsMobile } from "#/hooks/use-mobile.ts";
+import { cn } from "#/lib/utils.ts";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_notes-guard")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const isMobile = useIsMobile();
+
+  const handleDrawerOpenChange = (nextOpen: boolean) => {
+    setIsDrawerOpen(nextOpen);
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -44,9 +54,16 @@ function RouteComponent() {
             </Breadcrumb>
           </div>
         </header>
-        <div className="@container/main px-8 xl:px-32">
-          <NoteDetailDrawer />
+        <div
+          className={cn(
+            "@container/main transition-all duration-250 px-8 xl:px-32",
+            !isMobile && isDrawerOpen
+              ? "xl:pr-130 md:pr-106"
+              : "xl:pr-32 md:pr-8", // FIXME: awkward layout in small md viewport
+          )}
+        >
           <Outlet />
+          <NoteDetailDrawer onOpenChange={handleDrawerOpenChange} />
         </div>
       </SidebarInset>
     </SidebarProvider>
