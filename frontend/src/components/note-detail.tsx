@@ -45,14 +45,14 @@ export function NoteDetailDrawerTrigger(props: NoteDetailDrawerTriggerProps) {
 function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useNote({ id: noteId }, (() => {
-
-    return (
-      queryClient
+  const { data, isLoading, error } = useNote(
+    { id: noteId },
+    (() => {
+      return queryClient
         .getQueryData(noteListOption().queryKey)
-        ?.filter((data) => data.id === noteId) || []
-    );
-  }));
+        ?.filter((data) => data.id === noteId);
+    })(),
+  );
 
   const updateNoteContent = useMutation({
     mutationFn: async (
@@ -108,9 +108,6 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
             <DrawerTitle>
               <Skeleton className="h-5 w-full" />
             </DrawerTitle>
-            <DrawerDescription>
-              <Skeleton className="h-4 w-2/3" />
-            </DrawerDescription>
           </DrawerHeader>
           <div className="flex flex-col gap-2 p-4">
             <Skeleton className="h-4 w-full" />

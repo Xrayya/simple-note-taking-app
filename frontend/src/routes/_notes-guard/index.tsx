@@ -23,18 +23,16 @@ function Home() {
       searchString,
       isArchived: false,
     },
-    () => {
-      return (
-        queryClient
-          .getQueryData(noteListOption().queryKey)
-          ?.filter(
-            (data) =>
-              data.isArchived === false &&
-              (data.title.includes(searchString) ||
-                data.body.includes(searchString)),
-          ) || []
-      );
-    },
+    (() => {
+      return queryClient
+        .getQueryData(noteListOption().queryKey)
+        ?.filter(
+          (data) =>
+            data.isArchived === false &&
+            (data.title.includes(searchString) ||
+              data.body.includes(searchString)),
+        );
+    })(),
   );
 
   const handleNewNoteButtonClick = () => {

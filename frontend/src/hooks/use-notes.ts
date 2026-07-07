@@ -1,10 +1,7 @@
 import type { Note, NoteFilter } from "#/models/notes.ts";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export function noteListOption(
-  filter?: NoteFilter,
-  initialData?: Note[] | (() => Note[]),
-) {
+export function noteListOption(filter?: NoteFilter, initialData?: Note[]) {
   return queryOptions({
     queryKey: ["notes", filter] as const,
     initialData,
@@ -81,9 +78,6 @@ export function noteListOption(
   });
 }
 
-export function useNote(
-  filter?: NoteFilter,
-  initialData?: Note[] | (() => Note[]),
-) {
+export function useNote(filter?: NoteFilter, initialData?: Note[]) {
   return useQuery(noteListOption(filter, initialData));
 }

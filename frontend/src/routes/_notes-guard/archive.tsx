@@ -21,18 +21,16 @@ function RouteComponent() {
       searchString,
       isArchived: true,
     },
-    () => {
-      return (
-        queryClient
-          .getQueryData(noteListOption().queryKey)
-          ?.filter(
-            (data) =>
-              data.isArchived === true &&
-              (data.title.includes(searchString) ||
-                data.body.includes(searchString)),
-          ) || []
-      );
-    },
+    (() => {
+      return queryClient
+        .getQueryData(noteListOption().queryKey)
+        ?.filter(
+          (data) =>
+            data.isArchived === true &&
+            (data.title.includes(searchString) ||
+              data.body.includes(searchString)),
+        );
+    })(),
   );
 
   const handleSearchChange = (s: string) => {
