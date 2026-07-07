@@ -126,6 +126,7 @@ export function NoteCard({
 
   return (
     <NoteDetailDrawerTrigger
+      nativeButton={false}
       payload={{ noteId: id } as NoteDetailDrawerPayload}
       render={
         <Card
