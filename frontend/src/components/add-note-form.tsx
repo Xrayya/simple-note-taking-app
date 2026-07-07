@@ -1,3 +1,4 @@
+import type { Note } from "#/models/notes.ts";
 import { addNoteSchema } from "#/schema-validation/notes.ts";
 import { useForm } from "@tanstack/react-form";
 import {
@@ -13,7 +14,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import type { Note } from "#/models/notes.ts";
 
 type Props = ComponentProps<"div"> & {
   onCancel?: () => void;

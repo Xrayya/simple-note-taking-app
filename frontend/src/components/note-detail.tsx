@@ -1,5 +1,7 @@
 import { noteListOption, useNote } from "#/hooks/use-notes.ts";
 import { formatTimestamp } from "#/lib/utils.ts";
+import type { Note } from "#/models/notes.ts";
+import { updateNoteContentSchema } from "#/schema-validation/notes.ts";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -13,18 +15,16 @@ import {
 } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer";
+import { useForm } from "@tanstack/react-form";
 import {
   queryOptions,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useState, type ComponentProps } from "react";
-import { Skeleton } from "./ui/skeleton";
-import { useForm } from "@tanstack/react-form";
-import { updateNoteContentSchema } from "#/schema-validation/notes.ts";
-import type { Note } from "#/models/notes.ts";
-import type { z } from "zod";
 import { LoaderCircle } from "lucide-react";
+import { useState, type ComponentProps } from "react";
+import type { z } from "zod";
+import { Skeleton } from "./ui/skeleton";
 
 export type NoteDetailDrawerPayload = {
   noteId: string;
