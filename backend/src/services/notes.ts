@@ -6,6 +6,7 @@ import { NoteNotFoundError } from "../exceptions/notes";
 export type InputNoteType = {
   title: string;
   body: string;
+  authorId: string;
   isArchived?: boolean;
 };
 
