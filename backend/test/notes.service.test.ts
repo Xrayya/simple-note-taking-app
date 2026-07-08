@@ -10,8 +10,6 @@ import {
   type ReturnedNoteType,
 } from "../src/services/notes";
 
-const baseUrl = "http://localhost:3000";
-
 let mockUser: typeof users.$inferInsert = {
   username: "bambang",
   email: "bambang@example.com",
@@ -55,7 +53,7 @@ const mockUpdatedNote: InputNoteType = {
 
 let mockNotesDB: ReturnedNoteType[] = [];
 
-describe("Notes", () => {
+describe("Notes service", () => {
   beforeAll(async () => {
     mockUser = (
       await db
@@ -78,13 +76,7 @@ describe("Notes", () => {
     await db.delete(users);
   });
 
-  test("should return 200 when reaching root", async () => {
-    const response = await fetch(`${baseUrl}`);
-
-    expect(response.status).toBe(200);
-  });
-
-  test("should return 201 on valid note add request", async () => {
+  test("should perform proper add note", async () => {
     const newNote = await addNote(mockNotes[0]!);
 
     expect(newNote.id).toBeString();
@@ -95,7 +87,7 @@ describe("Notes", () => {
     expect(newNote.updatedAt).toBeNull();
   });
 
-  test("should return 201 on next valid note add request", async () => {
+  test("should perform proper another add note", async () => {
     const newNote = await addNote(mockNotes[1]!);
 
     expect(newNote.id).toBeString();
@@ -106,7 +98,7 @@ describe("Notes", () => {
     expect(newNote.updatedAt).toBeNull();
   });
 
-  test("should return 200 on valid note get request", async () => {
+  test("should perform proper get all notes", async () => {
     const notes = await getNotes();
 
     expect(notes).toBeArray();
@@ -127,7 +119,7 @@ describe("Notes", () => {
     mockNotesDB = notes;
   });
 
-  test("should return 200 on valid get archived note request", async () => {
+  test("should perform proper get all notes with isArchived=true fiter", async () => {
     await db.insert(notes).values(mockArchivedNotes);
     {
       const notes = await getNotes({ isArchived: true });
@@ -153,7 +145,7 @@ describe("Notes", () => {
     }
   });
 
-  test("should return 200 on valid get active note request", async () => {
+  test("should perform proper get all notes with isArchived=false filter", async () => {
     const notes = await getNotes({ isArchived: false });
 
     expect(notes).toBeArray();
@@ -172,7 +164,7 @@ describe("Notes", () => {
     });
   });
 
-  test("should return 200 on valid get note with search string request", async () => {
+  test("should perform proper get all notes with searchString filter", async () => {
     const notes = await getNotes({ searchString: "Body Test" });
 
     expect(notes).toBeArray();
@@ -191,7 +183,7 @@ describe("Notes", () => {
     });
   });
 
-  test("should return 200 on valid get note with another (2nd) search string request", async () => {
+  test("should perform proper get all notes with another searchString filter", async () => {
     const notes = await getNotes({ searchString: "slk" });
 
     expect(notes).toBeArray();
@@ -210,7 +202,7 @@ describe("Notes", () => {
     });
   });
 
-  test("should return 200 on valid get note with another (3nd) search string request", async () => {
+  test("should perform proper get all notes with another (again) searchString filter", async () => {
     const notes = await getNotes({ searchString: "100" });
 
     expect(notes).toBeArray();
@@ -229,7 +221,7 @@ describe("Notes", () => {
     });
   });
 
-  test("should return 200 on valid note update request", async () => {
+  test("should perform proper update note", async () => {
     const selectedNoteIdx = Math.floor(
       Math.random() * (mockNotesDB.length - 1 - 0 + 1),
     );
@@ -269,7 +261,7 @@ describe("Notes", () => {
     mockNotesDB = notes;
   });
 
-  test("should return 200 on valid note delete request", async () => {
+  test("should perform proper delete note", async () => {
     const selectedNoteIdx = Math.floor(
       Math.random() * (mockNotesDB.length - 1 - 0 + 1),
     );
