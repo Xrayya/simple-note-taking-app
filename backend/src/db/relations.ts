@@ -4,24 +4,24 @@ import * as schema from "./schema";
 export const relations = defineRelations(schema, (r) => ({
   users: {
     notes: r.many.notes({
-      from: r.nusers.id,
+      from: r.users.id,
       to: r.notes.authorId,
     }),
-    refreshTokens: r.many.nrefreshTokens({
-      from: r.nusers.id,
-      to: r.nrefreshTokens.ownerId,
+    refreshTokens: r.many.refreshTokens({
+      from: r.users.id,
+      to: r.refreshTokens.ownerId,
     }),
   },
   notes: {
-    author: r.one.nusers({
+    author: r.one.users({
       from: r.notes.authorId,
-      to: r.nusers.id,
+      to: r.users.id,
     }),
   },
   refreshTokens: {
-    owner: r.one.nusers({
-      from: r.nrefreshTokens.ownerId,
-      to: r.nusers.id,
+    owner: r.one.users({
+      from: r.refreshTokens.ownerId,
+      to: r.users.id,
     }),
   },
 }));
