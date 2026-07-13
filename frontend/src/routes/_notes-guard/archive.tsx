@@ -43,7 +43,7 @@ function RouteComponent() {
           <FieldGroup className="flex flex-row gap-4">
             <SearchNoteBar
               loading={isLoading}
-              debouce={200}
+              debounce={200}
               resultCount={searchString.length > 0 ? data?.length : undefined}
               onSearchChange={handleSearchChange}
             />

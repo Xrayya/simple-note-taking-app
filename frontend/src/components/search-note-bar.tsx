@@ -10,14 +10,14 @@ import {
 import { useDebouce } from "#/hooks/use-debounce.ts";
 
 type Props = ComponentProps<typeof Field> & {
-  debouce?: number;
+  debounce?: number;
   onSearchChange?: (s: string) => void;
   loading?: boolean;
   resultCount?: number;
 };
 
 export function SearchNoteBar({
-  debouce,
+  debounce: debouce,
   onSearchChange,
   resultCount,
   loading,
