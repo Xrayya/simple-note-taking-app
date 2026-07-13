@@ -42,10 +42,15 @@ export function SearchNoteBar({
         <InputGroupAddon align="inline-start">
           <SearchIcon />
         </InputGroupAddon>
-        {resultCount || loading ? (
+        {typeof resultCount === "number" || loading ? (
           <InputGroupAddon align="inline-end">
-            {loading ? <LoaderCircle className="animate-spin" /> : null}
-            {resultCount} result
+            {loading ? (
+              <>
+                <LoaderCircle className="animate-spin" />
+              </>
+            ) : (
+              <>{resultCount} result</>
+            )}
           </InputGroupAddon>
         ) : null}
         <InputGroupAddon align="inline-end">
