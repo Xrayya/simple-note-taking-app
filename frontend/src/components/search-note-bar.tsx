@@ -7,24 +7,28 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "./ui/input-group";
+import { useDebouce } from "#/hooks/use-debounce.ts";
 
 type Props = ComponentProps<typeof Field> & {
+  debouce?: number;
   onSearchChange?: (s: string) => void;
   loading?: boolean;
   resultCount?: number;
 };
 
 export function SearchNoteBar({
+  debouce,
   onSearchChange,
   resultCount,
   loading,
   ...restProps
 }: Props) {
   const [searchString, setSearchString] = useState("");
+  const debouncedSearchString = useDebouce(searchString, debouce || 0);
 
   useEffect(() => {
-    onSearchChange?.(searchString);
-  }, [searchString, onSearchChange]);
+    onSearchChange?.(debouncedSearchString);
+  }, [debouncedSearchString, onSearchChange]);
 
   return (
     <Field {...restProps}>
