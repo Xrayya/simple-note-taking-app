@@ -5,8 +5,10 @@
     "dev": "bun --hot src/index.ts"
   },
   "dependencies": {
+    "bcrypt-ts": "^9.0.1",
     "drizzle-orm": "^1.0.0-rc.4",
     "hono": "^4.12.25",
+    "jose": "^6.2.3",
     "postgres": "^3.4.9",
     "zod": "^4.4.3"
   },
