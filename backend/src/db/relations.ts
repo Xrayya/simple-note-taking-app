@@ -16,12 +16,14 @@ export const relations = defineRelations(schema, (r) => ({
     author: r.one.users({
       from: r.notes.authorId,
       to: r.users.id,
+      optional: false
     }),
   },
   refreshTokens: {
     owner: r.one.users({
       from: r.refreshTokens.ownerId,
       to: r.users.id,
+      optional: false
     }),
   },
 }));
