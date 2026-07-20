@@ -1,13 +1,7 @@
-import {
-  describe,
-  beforeAll,
-  afterAll,
-  test,
-  expect,
-  setDefaultTimeout,
-} from "bun:test";
+import { afterAll, describe, expect, setDefaultTimeout, test } from "bun:test";
 import { db } from "../src/db/db";
 import { refreshTokens, users } from "../src/db/schema";
+import { InvalidTokenError } from "../src/exceptions/auth";
 import {
   createToken,
   getAuthInfo,
@@ -17,7 +11,6 @@ import {
   register,
 } from "../src/services/auth";
 import { hasher } from "../src/utils";
-import { InvalidTokenError } from "../src/exceptions/auth";
 
 setDefaultTimeout(20000);
 
