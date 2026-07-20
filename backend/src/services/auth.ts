@@ -104,8 +104,6 @@ export async function createToken({
   userId: string;
   username: string;
   userEmail: string;
-  userRole: string;
-  deviceId: string;
   expiresIn: number;
 }): Promise<{ refreshToken: string; accessToken: string }> {
   // WARN: Potential exception
