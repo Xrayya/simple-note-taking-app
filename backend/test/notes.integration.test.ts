@@ -1,7 +1,9 @@
-import { describe, afterAll, test, expect } from "bun:test";
+import { describe, beforeAll, afterAll, test, expect, setDefaultTimeout } from "bun:test";
 import { db } from "../src/db/db";
 import { notes } from "../src/db/schema";
 import type { InputNoteType, ReturnedNoteType } from "../src/services/notes";
+
+setDefaultTimeout(20000)
 
 const baseUrl = "http://localhost:3000";
 

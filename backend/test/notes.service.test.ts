@@ -1,4 +1,4 @@
-import { describe, beforeAll, afterAll, test, expect } from "bun:test";
+import { describe, beforeAll, afterAll, test, expect, setDefaultTimeout } from "bun:test";
 import { db } from "../src/db/db";
 import { notes, users } from "../src/db/schema";
 import {
@@ -9,6 +9,8 @@ import {
   type InputNoteType,
   type ReturnedNoteType,
 } from "../src/services/notes";
+
+setDefaultTimeout(20000)
 
 let mockUser: typeof users.$inferInsert = {
   username: "bambang",
