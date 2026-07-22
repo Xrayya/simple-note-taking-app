@@ -1,3 +1,4 @@
 DATABASE_URL="postgresql://pg:password@localhost:6543/postgres"
 # Below is a hacky way to use same db instace handling mutiple projects; set it to "" if you don't use it
 DATABASE_TABLE_PREFIX="simple-note-taking-app"
+JWT_SECRET="somejwtsecret"

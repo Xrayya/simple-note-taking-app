@@ -1,8 +1,9 @@
 import { compareSync, hashSync } from "bcrypt-ts";
 import { jwtVerify, SignJWT, type JWTPayload } from "jose";
 import { InvalidTokenError } from "./exceptions/auth";
+import { env } from "./env";
 
-export const SECRET = new TextEncoder().encode(process.env["SECRET_KEY"]!);
+export const SECRET = new TextEncoder().encode(env.JWT_SECRET);
 
 export const hasher = {
   encrypt: (data: string): string => {

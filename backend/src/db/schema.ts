@@ -6,10 +6,11 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { env } from "../env";
 
-const USER_TABLE_NAME = `${process.env["DATABASE_TABLE_PREFIX"]!}-users`;
-const NOTE_TABLE_NAME = `${process.env["DATABASE_TABLE_PREFIX"]!}-notes`;
-const REFRESH_TOKEN_TABLE_NAME = `${process.env["DATABASE_TABLE_PREFIX"]!}-refresh-token`;
+const USER_TABLE_NAME = `${env.DATABASE_TABLE_PREFIX}-users`;
+const NOTE_TABLE_NAME = `${env.DATABASE_TABLE_PREFIX}-notes`;
+const REFRESH_TOKEN_TABLE_NAME = `${env.DATABASE_TABLE_PREFIX}-refresh-token`;
 
 const timestamps = {
   createdAt: timestamp("created_at").defaultNow().notNull(),
