@@ -1,7 +1,7 @@
 import { compareSync, hashSync } from "bcrypt-ts";
 import { jwtVerify, SignJWT, type JWTPayload } from "jose";
 import { InvalidTokenError } from "./exceptions/auth";
-import { env } from "./env";
+import { env, IS_PROD } from "./env";
 
 export const SECRET = new TextEncoder().encode(env.JWT_SECRET);
 
@@ -19,8 +19,7 @@ export const jwt = {
     return await new SignJWT(payload)
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      // .setExpirationTime("10m")
-      .setExpirationTime("4s") // 4 seconds for testing purposes
+      .setExpirationTime(IS_PROD ? "10m" : "4s")
       .sign(SECRET);
   },
   verify: async (token: string): Promise<JWTPayload> => {
