@@ -11,6 +11,7 @@ import {
   register,
 } from "../services/auth";
 import { loginSchema, registerSchema } from "../validation-schemas/auth";
+import { IS_PROD } from "../env";
 
 export const authRoute = new Hono()
   .post("/register", ...validateJsonRequest(registerSchema), async (c) => {
@@ -31,8 +32,7 @@ export const authRoute = new Hono()
 
     setCookie(c, "refreshToken", refreshToken, {
       httpOnly: true,
-      // TODO: I think should use env to differentiate
-      // secure: true,
+      secure: IS_PROD,
       sameSite: "Lax",
       maxAge: 60 * 60 * 24 * 30, // 30 days
       path: "/",
@@ -71,7 +71,7 @@ export const authRoute = new Hono()
 
     setCookie(c, "refreshToken", "", {
       httpOnly: true,
-      // secure: true,
+      secure: IS_PROD,
       sameSite: "Lax",
       maxAge: 0,
       path: "/",
