@@ -166,11 +166,11 @@ describe("Auth Service", () => {
   });
 
   test("acccess token should be invalid after 4s", async () => {
-    setTimeout(() => {
-      expect(() => {
-        getAuthInfo({ accessToken: mockAccessToken });
-      }).toThrowError(InvalidTokenError);
-    }, 4010);
+    await new Promise((resolve) => setTimeout(resolve, 4010));
+
+    expect(getAuthInfo({ accessToken: mockAccessToken })).rejects.toThrowError(
+      InvalidTokenError,
+    );
   });
 
   test("should perform proper access token refresh", async () => {
@@ -189,17 +189,17 @@ describe("Auth Service", () => {
     expect(response).toBeDefined();
   });
 
-  test("new acccess token should be invalid after 4s", async () => {
-    setTimeout(() => {
-      expect(() => {
-        getAuthInfo({ accessToken: mockAccessToken });
-      }).toThrowError(InvalidTokenError);
-    }, 4010);
+  test("acccess token should be invalid after 4s", async () => {
+    await new Promise((resolve) => setTimeout(resolve, 4010));
+
+    expect(getAuthInfo({ accessToken: mockAccessToken })).rejects.toThrowError(
+      InvalidTokenError,
+    );
   });
 
   test("should perform proper logout", async () => {
-    expect(() => {
-      logout({ refreshToken: mockRefreshToken });
-    }).not.toThrowError();
+    expect(
+      logout({ refreshToken: mockRefreshToken }),
+    ).resolves.toBeUndefined()
   });
 });
