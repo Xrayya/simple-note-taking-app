@@ -159,10 +159,12 @@ describe("Auth Service", () => {
     mockRefreshToken = refreshToken;
   });
 
-  test("acccess token should be valid withitn 4s", async () => {
-    const response = await getAuthInfo({ accessToken: mockAccessToken });
+  test("acccess token should be valid withitn 4s and contain valid data", async () => {
+    const authInfo = await getAuthInfo({ accessToken: mockAccessToken });
 
-    expect(response).toBeDefined();
+    expect(authInfo).toBeDefined();
+    expect(authInfo.username).toBe(mockUser[0]!.username);
+    expect(authInfo.email).toBe(mockUser[0]!.email);
   });
 
   test("acccess token should be invalid after 4s", async () => {
@@ -171,6 +173,19 @@ describe("Auth Service", () => {
     expect(getAuthInfo({ accessToken: mockAccessToken })).rejects.toThrowError(
       InvalidTokenError,
     );
+  });
+
+  test("refresh token should contain valid info", async () => {
+    const refreshTokenEntry = await db.query.refreshTokens.findFirst({
+      where: {
+        token: { eq: mockRefreshToken },
+      },
+    });
+
+    expect(refreshTokenEntry).toBeDefined();
+    expect(refreshTokenEntry?.id).toBeString();
+    expect(refreshTokenEntry?.ownerId).toBe(mockUser[0]!.id!);
+    expect(refreshTokenEntry?.expiredAt).toBeDate();
   });
 
   test("should perform proper access token refresh", async () => {
@@ -183,13 +198,15 @@ describe("Auth Service", () => {
     mockAccessToken = newRefreshToken;
   });
 
-  test("new acccess token should be valid withitn 4s", async () => {
-    const response = await getAuthInfo({ accessToken: mockAccessToken });
+  test("acccess token should be valid withitn 4s and contain valid data after refresh", async () => {
+    const authInfo = await getAuthInfo({ accessToken: mockAccessToken });
 
-    expect(response).toBeDefined();
+    expect(authInfo).toBeDefined();
+    expect(authInfo.username).toBe(mockUser[0]!.username);
+    expect(authInfo.email).toBe(mockUser[0]!.email);
   });
 
-  test("acccess token should be invalid after 4s", async () => {
+  test("acccess token should be invalid after 4s after refresh", async () => {
     await new Promise((resolve) => setTimeout(resolve, 4010));
 
     expect(getAuthInfo({ accessToken: mockAccessToken })).rejects.toThrowError(
@@ -198,8 +215,14 @@ describe("Auth Service", () => {
   });
 
   test("should perform proper logout", async () => {
-    expect(
-      logout({ refreshToken: mockRefreshToken }),
-    ).resolves.toBeUndefined()
+    expect(logout({ refreshToken: mockRefreshToken })).resolves.toBeUndefined();
+
+    const refreshTokenEntry = await db.query.refreshTokens.findFirst({
+      where: {
+        token: { eq: mockRefreshToken },
+      },
+    });
+
+    expect(refreshTokenEntry).toBeUndefined();
   });
 });
