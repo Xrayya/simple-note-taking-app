@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { authMiddleware } from "../middlewares/auth";
 import {
   validateJsonRequest,
   validateRequest,
@@ -9,53 +10,46 @@ import {
   getNotesSchema,
   updateNoteSchema,
 } from "../validation-schemas/notes";
-import { db } from "../db/db";
-import { users } from "../db/schema";
 
 export const notesRoute = new Hono()
+  .use(authMiddleware)
   .get("/", ...validateRequest(getNotesSchema), async (c) => {
+    const userId = c.get("user").userId;
+
     const filters = c.req.valid("query");
 
-    const notes = await getNotes(filters);
+    const notes = await getNotes(userId, filters);
 
     return c.json({ notes }, 200);
   })
   .post("/", ...validateJsonRequest(addNoteSchema), async (c) => {
+    const userId = c.get("user").userId;
+
     const newNoteData = c.req.valid("json");
 
-    let dbUsers = await db.query.users.findMany();
-
-    if (dbUsers.length === 0) {
-      dbUsers = await db
-        .insert(users)
-        .values({
-          email: "bambang@example.com",
-          username: "bambang",
-          passwordHash: "mockpassowrd",
-        })
-        .returning();
-    }
-
-    const newNote = await addNote({
+    const newNote = await addNote(userId, {
       ...newNoteData,
-      authorId: dbUsers[0]?.id!,
     });
 
     return c.json({ newNote }, 201);
   })
   .put("/:noteId", ...validateJsonRequest(updateNoteSchema), async (c) => {
+    const userId = c.get("user").userId;
+
     const noteId = c.req.param("noteId");
 
     const updatedNoteData = c.req.valid("json");
 
-    const updatedNote = await updateNote({ noteId, updatedNoteData });
+    const updatedNote = await updateNote(userId, { noteId, updatedNoteData });
 
     return c.json({ updatedNote }, 200);
   })
   .delete("/:noteId", async (c) => {
+    const userId = c.get("user").userId;
+
     const noteId = c.req.param("noteId");
 
-    const deletedNote = await deleteNote({ noteId });
+    const deletedNote = await deleteNote(userId, { noteId });
 
     return c.json({ deletedNote }, 200);
   });
