@@ -15,18 +15,22 @@ import {
   FieldSet,
 } from "#/components/ui/field.tsx";
 import { Input } from "#/components/ui/input.tsx";
+import { toast } from "#/components/ui/toast.tsx";
 import { registerSchema } from "#/schema-validation/auth.ts";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { GalleryVerticalEnd, LoaderCircle } from "lucide-react";
 import type { z } from "zod";
+import { Route as loginRoute } from "./login.tsx";
 
 export const Route = createFileRoute("/register")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+
   const register = useMutation({
     mutationFn: async (
       registerInfo: z.infer<typeof registerSchema>,
@@ -35,7 +39,7 @@ function RouteComponent() {
       username: string;
       timestamp: Date;
     }> => {
-      const url = new URL(`/auth/register`, window.location.origin);
+      const url = new URL(`/api/auth/register`, window.location.origin);
 
       const response = await fetch(url, {
         headers: { "Content-Type": "application/json" },
@@ -54,6 +58,18 @@ function RouteComponent() {
 
       const payload = await response.json();
       return payload.newUser;
+    },
+    onSuccess: () => {
+      toast.add({
+        type: "success",
+        description: "Register new account succesfully",
+      });
+
+      setTimeout(() => {
+        navigate({
+          to: loginRoute.to,
+        });
+      }, 500);
     },
   });
 
@@ -193,7 +209,8 @@ function RouteComponent() {
                             Register
                           </Button>
                           <FieldDescription className="text-center">
-                            Already have an account? <a href="#">Login</a>
+                            <span>Already have an account? </span>
+                            <Link to={loginRoute.to}>Login</Link>
                           </FieldDescription>
                         </Field>
                       </FieldGroup>
