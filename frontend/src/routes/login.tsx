@@ -24,6 +24,7 @@ import { useMutation } from "@tanstack/react-query";
 import { loginSchema } from "#/schema-validation/auth.ts";
 import type { z } from "zod";
 import { toast } from "#/components/ui/toast.tsx";
+import { accessToken } from "#/models/accessToken.ts";
 
 export const Route = createFileRoute("/login")({
   component: RouteComponent,
@@ -36,9 +37,9 @@ function RouteComponent() {
     mutationFn: async (
       loginInfo: z.infer<typeof loginSchema>,
     ): Promise<{
-      email: string;
       username: string;
-      timestamp: Date;
+      email: string;
+      accessToken: string;
     }> => {
       const url = new URL(`/api/auth/login`, window.location.origin);
 
@@ -61,11 +62,13 @@ function RouteComponent() {
       const payload = await response.json();
       return payload.newUser;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.add({
         type: "success",
         description: "Login succesfully",
       });
+
+      accessToken.set(data.accessToken);
 
       setTimeout(() => {
         navigate({
