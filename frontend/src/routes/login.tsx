@@ -16,18 +16,75 @@ import {
 } from "#/components/ui/field.tsx";
 import { Input } from "#/components/ui/input.tsx";
 import { useForm } from "@tanstack/react-form";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { GalleryVerticalEnd, LoaderCircle } from "lucide-react";
+import { Route as registerRoute } from "./register.tsx";
+import { Route as homeRoute } from "./_notes-guard/index.tsx";
+import { useMutation } from "@tanstack/react-query";
+import { loginSchema } from "#/schema-validation/auth.ts";
+import type { z } from "zod";
+import { toast } from "#/components/ui/toast.tsx";
 
 export const Route = createFileRoute("/login")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+
+  const login = useMutation({
+    mutationFn: async (
+      loginInfo: z.infer<typeof loginSchema>,
+    ): Promise<{
+      email: string;
+      username: string;
+      timestamp: Date;
+    }> => {
+      const url = new URL(`/api/auth/login`, window.location.origin);
+
+      const response = await fetch(url, {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({ ...loginInfo }),
+      });
+
+      if (!response.ok) {
+        const payload = await response.json();
+
+        throw new Error(
+          payload?.error?.message || "An error occurred while fetching data",
+          { cause: payload?.error?.name },
+        );
+      }
+
+      const payload = await response.json();
+      return payload.newUser;
+    },
+    onSuccess: () => {
+      toast.add({
+        type: "success",
+        description: "Login succesfully",
+      });
+
+      setTimeout(() => {
+        navigate({
+          to: homeRoute.to,
+        });
+      }, 500);
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       usernameOrEmail: "",
       password: "",
+    },
+    validators: {
+      onChange: loginSchema,
+    },
+    onSubmit: ({ value }) => {
+      login.mutate({ ...value });
     },
   });
 
@@ -116,9 +173,6 @@ function RouteComponent() {
                                   Forgot your password?
                                 </a>
                               </div>
-                              <FieldLabel htmlFor={field.name}>
-                                Password
-                              </FieldLabel>
                               <Input
                                 type="password"
                                 id={field.name}
@@ -138,10 +192,11 @@ function RouteComponent() {
                             {isSubmitting ? (
                               <LoaderCircle className="animate-spin" />
                             ) : null}
-                            Register
+                            Login
                           </Button>
                           <FieldDescription className="text-center">
-                            Don&apos;t have an account? <a href="#">Register</a>
+                            <span>Don&apos;t have an account? </span>
+                            <Link to={registerRoute.to}>Register</Link>
                           </FieldDescription>
                         </Field>
                       </FieldGroup>
