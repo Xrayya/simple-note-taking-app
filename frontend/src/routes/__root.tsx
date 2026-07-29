@@ -1,6 +1,6 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { Toaster } from "#/components/ui/toast.tsx";
@@ -8,9 +8,11 @@ import { TooltipProvider } from "#/components/ui/tooltip.tsx";
 import { ThemeProvider } from "#/contexts/theme-context.tsx";
 import "../styles.css";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  queryClient: typeof queryClient;
+}>()({
   component: RootComponent,
 });
 
