@@ -53,43 +53,32 @@ export async function authFetch(
   });
 
   if (response.status === 401) {
-    const body = await response.json();
+    const newTokenResponse = await fetch(
+      new URL("/api/auth/refresh", window.location.origin),
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
 
-    if (body.name === "AuthenticationRequiredError") {
-      const newTokenResponse = await fetch(
-        new URL("/api/auth/refresh", window.location.origin),
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
-
-      if (!newTokenResponse.ok) {
-        const payload = await newTokenResponse.json();
-
-        throw new Error(
-          payload?.error?.message || "An error occurred while fetching data",
-          { cause: payload?.error?.name },
-        );
-      }
-
-      accessToken.set((await newTokenResponse.json()).newAccessToken);
-
-      response = await fetch(input, {
-        ...init,
-        headers: {
-          ...init?.headers,
-          Authorization: `Bearer ${accessToken.get()}`,
-        },
-      });
-    } else {
-      const payload = await response.json();
+    if (!newTokenResponse.ok) {
+      const payload = await newTokenResponse.json();
 
       throw new Error(
         payload?.error?.message || "An error occurred while fetching data",
         { cause: payload?.error?.name },
       );
     }
+
+    accessToken.set((await newTokenResponse.json()).accessToken);
+
+    response = await fetch(input, {
+      ...init,
+      headers: {
+        ...init?.headers,
+        Authorization: `Bearer ${accessToken.get()}`,
+      },
+    });
   }
 
   return response;
