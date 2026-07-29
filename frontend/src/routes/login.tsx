@@ -19,7 +19,7 @@ import { useForm } from "@tanstack/react-form";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { GalleryVerticalEnd, LoaderCircle } from "lucide-react";
 import { Route as registerRoute } from "./register.tsx";
-import { Route as homeRoute } from "./_notes-guard/index.tsx";
+import { Route as homeRoute } from "./_auth/index.tsx";
 import { useMutation } from "@tanstack/react-query";
 import { loginSchema } from "#/schema-validation/auth.ts";
 import type { z } from "zod";

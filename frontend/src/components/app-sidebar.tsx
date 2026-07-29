@@ -13,8 +13,8 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { Archive, GalleryVerticalEndIcon, Notebook } from "lucide-react";
 import type { ComponentProps } from "react";
-import { Route as activeNotesRoute } from "../routes/_notes-guard";
-import { Route as archivedNotesRoute } from "../routes/_notes-guard/archive";
+import { Route as activeNotesRoute } from "../routes/_auth";
+import { Route as archivedNotesRoute } from "../routes/_auth/archive";
 import { ThemeToggle } from "./theme-toggle";
 
 const mockUserData = {
