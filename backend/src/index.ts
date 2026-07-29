@@ -8,6 +8,12 @@ import { authRoute } from "./routes/auth";
 import { cors } from "hono/cors";
 import { env, IS_PROD } from "./env";
 
+console.log("Runtime Check:", {
+  IS_PROD,
+  NODE_ENV: env.NODE_ENV,
+  ALLOWED_ORIGINS: env.ALLOWED_ORIGINS
+});
+
 const app = new Hono();
 
 app.use(logger());
