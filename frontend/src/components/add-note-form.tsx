@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { authFetch } from "#/lib/utils.ts";
 
 type Props = ComponentProps<"div"> & {
   onCancel?: () => void;
@@ -33,7 +34,7 @@ export function AddNoteForm({
     ): Promise<Note> => {
       const url = new URL("/api/notes", window.location.origin);
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         headers: { "Content-Type": "application/json" },
         method: "POST",
         body: JSON.stringify({ ...newNote }),

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { authFetch, cn } from "@/lib/utils";
 import {
   queryOptions,
   useMutation,
@@ -53,7 +53,7 @@ export function NoteCard({
     mutationFn: async (): Promise<Note> => {
       const url = new URL(`/api/notes/${id}`, window.location.origin);
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         headers: { "Content-Type": "application/json" },
         method: "PUT",
         body: JSON.stringify({ isArchived: !isArchived }),
@@ -87,7 +87,7 @@ export function NoteCard({
     }> => {
       const url = new URL(`/api/notes/${id}`, window.location.origin);
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         headers: { "Content-Type": "application/json" },
         method: "DELETE",
       });

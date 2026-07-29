@@ -1,6 +1,6 @@
 import { useNote } from "#/hooks/use-notes.ts";
 import { noteListOption } from "#/lib/api.ts";
-import { formatTimestamp } from "#/lib/utils.ts";
+import { authFetch, formatTimestamp } from "#/lib/utils.ts";
 import type { Note } from "#/models/notes.ts";
 import { updateNoteContentSchema } from "#/schema-validation/notes.ts";
 import { Button } from "@/components/ui/button";
@@ -61,7 +61,7 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
     ): Promise<Note> => {
       const url = new URL(`/api/notes/${noteId}`, window.location.origin);
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         headers: { "Content-Type": "application/json" },
         method: "PUT",
         body: JSON.stringify({ ...updatedNoteContent }),
