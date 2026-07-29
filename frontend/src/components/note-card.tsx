@@ -163,7 +163,9 @@ export function NoteCard({
                     <DropdownMenuLabel>Action</DropdownMenuLabel>
                     <DropdownMenuItem
                       disabled={archiveUnarchiveNote.isPending}
-                      onSelect={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         archiveUnarchiveNote.mutate();
                       }}
                     >
@@ -185,7 +187,9 @@ export function NoteCard({
                     <DropdownMenuItem
                       variant="destructive"
                       disabled={deleteNote.isPending}
-                      onSelect={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         deleteNote.mutate();
                       }}
                     >
