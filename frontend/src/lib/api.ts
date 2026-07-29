@@ -21,7 +21,7 @@ export function noteListOption(filter?: NoteFilter, initialData?: Note[]) {
         url.searchParams.set("body", filter?.body);
       }
 
-      if (filter?.isArchived) {
+      if (filter?.isArchived !== undefined) {
         url.searchParams.set(
           "isArchived",
           filter?.isArchived ? "true" : "false",
