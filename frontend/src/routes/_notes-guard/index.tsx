@@ -1,7 +1,8 @@
 import { AddNoteButton } from "#/components/add-note-button.tsx";
 import { SearchNoteBar } from "#/components/search-note-bar.tsx";
 import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
-import { noteListOption, useNote } from "#/hooks/use-notes.ts";
+import { useNote } from "#/hooks/use-notes.ts";
+import { noteListOption } from "#/lib/api.ts";
 import { AddNoteForm } from "@/components/add-note-form";
 import { NoteGrid } from "@/components/note-grid";
 import { cn } from "@/lib/utils";

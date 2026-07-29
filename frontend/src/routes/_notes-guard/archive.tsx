@@ -1,7 +1,8 @@
 import { NoteGrid } from "#/components/note-grid.tsx";
 import { SearchNoteBar } from "#/components/search-note-bar.tsx";
 import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
-import { noteListOption, useNote } from "#/hooks/use-notes.ts";
+import { useNote } from "#/hooks/use-notes.ts";
+import { noteListOption } from "#/lib/api.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";

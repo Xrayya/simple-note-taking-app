@@ -1,4 +1,5 @@
-import { noteListOption, useNote } from "#/hooks/use-notes.ts";
+import { useNote } from "#/hooks/use-notes.ts";
+import { noteListOption } from "#/lib/api.ts";
 import { formatTimestamp } from "#/lib/utils.ts";
 import type { Note } from "#/models/notes.ts";
 import { updateNoteContentSchema } from "#/schema-validation/notes.ts";
