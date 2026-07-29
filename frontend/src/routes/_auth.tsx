@@ -22,7 +22,7 @@ import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import { useState } from "react";
 import { Route as loginRoute } from "./login.tsx";
 
-export const Route = createFileRoute("/_notes-guard")({
+export const Route = createFileRoute("/_auth")({
   beforeLoad: async ({ context }) => {
     try {
       const data = await context.queryClient.fetchQuery(authMeOption);

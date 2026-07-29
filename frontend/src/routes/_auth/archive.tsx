@@ -1,19 +1,17 @@
-import { AddNoteButton } from "#/components/add-note-button.tsx";
+import { NoteGrid } from "#/components/note-grid.tsx";
 import { SearchNoteBar } from "#/components/search-note-bar.tsx";
 import { FieldGroup, FieldSet } from "#/components/ui/field.tsx";
 import { useNote } from "#/hooks/use-notes.ts";
 import { noteListOption } from "#/lib/api.ts";
-import { AddNoteForm } from "@/components/add-note-form";
-import { NoteGrid } from "@/components/note-grid";
-import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-export const Route = createFileRoute("/_notes-guard/")({ component: Home });
+export const Route = createFileRoute("/_auth/archive")({
+  component: RouteComponent,
+});
 
-function Home() {
-  const [isAddNoteFormShowed, setAddNoteFormShowed] = useState<boolean>(false);
+function RouteComponent() {
   const [searchString, setSearchString] = useState<string>("");
 
   const queryClient = useQueryClient();
@@ -21,34 +19,22 @@ function Home() {
   const { data, isLoading, error } = useNote(
     {
       searchString,
-      isArchived: false,
+      isArchived: true,
     },
     (() => {
       return queryClient
         .getQueryData(noteListOption().queryKey)
         ?.filter(
           (data) =>
-            data.isArchived === false &&
+            data.isArchived === true &&
             (data.title.includes(searchString) ||
               data.body.includes(searchString)),
         );
     })(),
   );
 
-  const handleNewNoteButtonClick = () => {
-    setAddNoteFormShowed(true);
-  };
-
   const handleSearchChange = (s: string) => {
     setSearchString(s);
-  };
-
-  const handleAddNoteFormCancel = () => {
-    setAddNoteFormShowed(false);
-  };
-
-  const handleAddNoteCompleteSubmit = () => {
-    setAddNoteFormShowed(false);
   };
 
   return (
@@ -62,14 +48,8 @@ function Home() {
               resultCount={searchString.length > 0 ? data?.length : undefined}
               onSearchChange={handleSearchChange}
             />
-            <AddNoteButton onNewNoteButtonClick={handleNewNoteButtonClick} />
           </FieldGroup>
         </FieldSet>
-        <AddNoteForm
-          className={cn(isAddNoteFormShowed ? null : "hidden")}
-          onCompleteSubmit={handleAddNoteCompleteSubmit}
-          onCancel={handleAddNoteFormCancel}
-        />
       </section>
 
       <section className="flex flex-1 flex-col gap-4">

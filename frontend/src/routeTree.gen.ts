@@ -11,9 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as NotesGuardRouteImport } from './routes/_notes-guard'
-import { Route as NotesGuardIndexRouteImport } from './routes/_notes-guard/index'
-import { Route as NotesGuardArchiveRouteImport } from './routes/_notes-guard/archive'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as AuthIndexRouteImport } from './routes/_auth/index'
+import { Route as AuthArchiveRouteImport } from './routes/_auth/archive'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -25,40 +25,40 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NotesGuardRoute = NotesGuardRouteImport.update({
-  id: '/_notes-guard',
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NotesGuardIndexRoute = NotesGuardIndexRouteImport.update({
+const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => NotesGuardRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
-const NotesGuardArchiveRoute = NotesGuardArchiveRouteImport.update({
+const AuthArchiveRoute = AuthArchiveRouteImport.update({
   id: '/archive',
   path: '/archive',
-  getParentRoute: () => NotesGuardRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof NotesGuardIndexRoute
+  '/': typeof AuthIndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/archive': typeof NotesGuardArchiveRoute
+  '/archive': typeof AuthArchiveRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/archive': typeof NotesGuardArchiveRoute
-  '/': typeof NotesGuardIndexRoute
+  '/archive': typeof AuthArchiveRoute
+  '/': typeof AuthIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_notes-guard': typeof NotesGuardRouteWithChildren
+  '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/_notes-guard/archive': typeof NotesGuardArchiveRoute
-  '/_notes-guard/': typeof NotesGuardIndexRoute
+  '/_auth/archive': typeof AuthArchiveRoute
+  '/_auth/': typeof AuthIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -67,15 +67,15 @@ export interface FileRouteTypes {
   to: '/login' | '/register' | '/archive' | '/'
   id:
     | '__root__'
-    | '/_notes-guard'
+    | '/_auth'
     | '/login'
     | '/register'
-    | '/_notes-guard/archive'
-    | '/_notes-guard/'
+    | '/_auth/archive'
+    | '/_auth/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  NotesGuardRoute: typeof NotesGuardRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
 }
@@ -96,46 +96,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_notes-guard': {
-      id: '/_notes-guard'
+    '/_auth': {
+      id: '/_auth'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof NotesGuardRouteImport
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_notes-guard/': {
-      id: '/_notes-guard/'
+    '/_auth/': {
+      id: '/_auth/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof NotesGuardIndexRouteImport
-      parentRoute: typeof NotesGuardRoute
+      preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRoute
     }
-    '/_notes-guard/archive': {
-      id: '/_notes-guard/archive'
+    '/_auth/archive': {
+      id: '/_auth/archive'
       path: '/archive'
       fullPath: '/archive'
-      preLoaderRoute: typeof NotesGuardArchiveRouteImport
-      parentRoute: typeof NotesGuardRoute
+      preLoaderRoute: typeof AuthArchiveRouteImport
+      parentRoute: typeof AuthRoute
     }
   }
 }
 
-interface NotesGuardRouteChildren {
-  NotesGuardArchiveRoute: typeof NotesGuardArchiveRoute
-  NotesGuardIndexRoute: typeof NotesGuardIndexRoute
+interface AuthRouteChildren {
+  AuthArchiveRoute: typeof AuthArchiveRoute
+  AuthIndexRoute: typeof AuthIndexRoute
 }
 
-const NotesGuardRouteChildren: NotesGuardRouteChildren = {
-  NotesGuardArchiveRoute: NotesGuardArchiveRoute,
-  NotesGuardIndexRoute: NotesGuardIndexRoute,
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthArchiveRoute: AuthArchiveRoute,
+  AuthIndexRoute: AuthIndexRoute,
 }
 
-const NotesGuardRouteWithChildren = NotesGuardRoute._addFileChildren(
-  NotesGuardRouteChildren,
-)
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  NotesGuardRoute: NotesGuardRouteWithChildren,
+  AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
 }
