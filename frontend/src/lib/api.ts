@@ -62,7 +62,7 @@ export function noteListOption(filter?: NoteFilter, initialData?: Note[]) {
         );
       }
 
-      const response = await fetch(url);
+      const response = await authFetch(url);
 
       if (!response.ok) {
         const payload = await response.json();
