@@ -18,7 +18,7 @@ export const authMiddleware = createMiddleware<{
     throw new AuthenticationRequiredError();
   }
 
-  const { payload } = await jwt.verify(token);
+  const payload = await jwt.verify(token);
 
   c.set(
     "user",
