@@ -190,7 +190,6 @@ export async function getAuthInfo({
     userId: string;
     username: string;
     email: string;
-    role: string;
   };
 
   const user = await db.query.users.findFirst({
