@@ -34,6 +34,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { toast } from "./ui/toast";
 
 type Props = ComponentProps<"div"> & Note;
 
@@ -72,6 +73,11 @@ export function NoteCard({
       return payload.updatedNote;
     },
     onSuccess: () => {
+      toast.add({
+        type: "success",
+        description: `Succesfully ${isArchived ? "unarchiving" : "archiving"} note '${title}'`,
+      });
+
       queryClient.invalidateQueries(
         queryOptions({
           queryKey: ["notes"],
@@ -105,6 +111,11 @@ export function NoteCard({
       return payload.deletedNote;
     },
     onSuccess: () => {
+      toast.add({
+        type: "success",
+        description: `Succesfully delete note '${title}'`,
+      });
+
       queryClient.invalidateQueries(
         queryOptions({
           queryKey: ["notes"],

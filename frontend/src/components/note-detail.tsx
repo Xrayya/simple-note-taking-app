@@ -26,6 +26,7 @@ import { LoaderCircle } from "lucide-react";
 import { useState, type ComponentProps } from "react";
 import type { z } from "zod";
 import { Skeleton } from "./ui/skeleton";
+import { toast } from "./ui/toast";
 
 export type NoteDetailDrawerPayload = {
   noteId: string;
@@ -79,7 +80,12 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
       const payload = await response.json();
       return payload.updatedNote;
     },
-    onSuccess: () => {
+    onSuccess: (_data, { title }) => {
+      toast.add({
+        type: "success",
+        description: `Succesfully update note '${title}'`,
+      });
+
       queryClient.invalidateQueries(
         queryOptions({
           queryKey: ["notes"],
