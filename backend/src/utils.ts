@@ -15,11 +15,22 @@ export const hasher = {
 };
 
 export const jwt = {
-  sign: async (payload: any): Promise<string> => {
+  sign: async (
+    payload: any,
+    options?: {
+      expirationTime?: number | string | Date;
+    },
+  ): Promise<string> => {
     return await new SignJWT(payload)
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setExpirationTime(IS_PROD ? "10m" : "4s")
+      .setExpirationTime(
+        options?.expirationTime !== undefined
+          ? options.expirationTime
+          : IS_PROD
+            ? "10m"
+            : "4s",
+      )
       .sign(SECRET);
   },
   verify: async (token: string): Promise<JWTPayload> => {
