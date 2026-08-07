@@ -9,12 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SuccessfulLoginRouteImport } from './routes/successful-login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as CompleteRegistrationRouteImport } from './routes/complete-registration'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
 import { Route as AuthArchiveRouteImport } from './routes/_auth/archive'
 
+const SuccessfulLoginRoute = SuccessfulLoginRouteImport.update({
+  id: '/successful-login',
+  path: '/successful-login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -23,6 +30,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompleteRegistrationRoute = CompleteRegistrationRouteImport.update({
+  id: '/complete-registration',
+  path: '/complete-registration',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -42,46 +54,75 @@ const AuthArchiveRoute = AuthArchiveRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
+  '/complete-registration': typeof CompleteRegistrationRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/successful-login': typeof SuccessfulLoginRoute
   '/archive': typeof AuthArchiveRoute
 }
 export interface FileRoutesByTo {
+  '/complete-registration': typeof CompleteRegistrationRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/successful-login': typeof SuccessfulLoginRoute
   '/archive': typeof AuthArchiveRoute
   '/': typeof AuthIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
+  '/complete-registration': typeof CompleteRegistrationRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/successful-login': typeof SuccessfulLoginRoute
   '/_auth/archive': typeof AuthArchiveRoute
   '/_auth/': typeof AuthIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/archive'
+  fullPaths:
+    | '/'
+    | '/complete-registration'
+    | '/login'
+    | '/register'
+    | '/successful-login'
+    | '/archive'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/archive' | '/'
+  to:
+    | '/complete-registration'
+    | '/login'
+    | '/register'
+    | '/successful-login'
+    | '/archive'
+    | '/'
   id:
     | '__root__'
     | '/_auth'
+    | '/complete-registration'
     | '/login'
     | '/register'
+    | '/successful-login'
     | '/_auth/archive'
     | '/_auth/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
+  CompleteRegistrationRoute: typeof CompleteRegistrationRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  SuccessfulLoginRoute: typeof SuccessfulLoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/successful-login': {
+      id: '/successful-login'
+      path: '/successful-login'
+      fullPath: '/successful-login'
+      preLoaderRoute: typeof SuccessfulLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -94,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/complete-registration': {
+      id: '/complete-registration'
+      path: '/complete-registration'
+      fullPath: '/complete-registration'
+      preLoaderRoute: typeof CompleteRegistrationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -134,8 +182,10 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
+  CompleteRegistrationRoute: CompleteRegistrationRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  SuccessfulLoginRoute: SuccessfulLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
