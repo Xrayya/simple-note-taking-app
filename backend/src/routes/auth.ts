@@ -92,7 +92,7 @@ export const authRoute = new Hono()
           path: "/",
         });
 
-        c.redirect(`${env.CLIENT_ORIGIN}/successful-login`);
+        return c.redirect(`${env.CLIENT_ORIGIN}/successful-login`);
       }
 
       const tempToken = await createGooglePreRegistrationTempToken({
