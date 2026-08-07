@@ -66,6 +66,7 @@ export const authRoute = new Hono()
       client_id: env.GOOGLE_CLIENT_ID,
       client_secret: env.GOOGLE_CLIENT_SECRET,
       scope: ["openid", "email"],
+      redirect_uri: env.GOOGLE_REDIRECT_URI,
     }),
     async (c) => {
       const googleUser = c.get("user-google");
