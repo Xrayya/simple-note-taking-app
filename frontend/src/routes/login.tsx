@@ -25,6 +25,7 @@ import { loginSchema } from "#/schema-validation/auth.ts";
 import type { z } from "zod";
 import { toast } from "#/components/ui/toast.tsx";
 import { accessToken } from "#/models/accessToken.ts";
+import { env } from "#/lib/env.ts";
 
 export const Route = createFileRoute("/login")({
   component: RouteComponent,
@@ -91,6 +92,10 @@ function RouteComponent() {
     },
   });
 
+  const handleGoogleLoginClick = () => {
+    window.location.href = `${env.VITE_BACKEND_ENDPOINT}${env.VITE_BACKEND_ROUTE_PREFIX}/auth/google`
+  }
+
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -125,6 +130,7 @@ function RouteComponent() {
                             variant="outline"
                             type="button"
                             disabled={isSubmitting}
+                            onClick={handleGoogleLoginClick}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
