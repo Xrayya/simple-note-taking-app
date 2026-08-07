@@ -1,5 +1,4 @@
 import { db } from "../db/db";
-import { UserNotFoundError } from "../exceptions/users";
 
 type UserType = {
   id: string;
@@ -15,14 +14,10 @@ export async function findByEmail({
   email,
 }: {
   email: string;
-}): Promise<UserType> {
+}): Promise<UserType | undefined> {
   const result = await db.query.users.findFirst({
     where: { email: { eq: email } },
   });
-
-  if (!result) {
-    throw new UserNotFoundError("email", email);
-  }
 
   return result;
 }
