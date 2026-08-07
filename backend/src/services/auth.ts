@@ -11,6 +11,7 @@ import {
 } from "../exceptions/auth";
 import { UnknownError } from "../exceptions/base";
 import { hasher, jwt } from "../utils";
+import { tempRegistrationTokenSchema } from "../validation-schemas/auth";
 
 export async function register({
   email,
@@ -54,6 +55,68 @@ export async function register({
       error.cause.constraint_name?.includes("email")
     ) {
       throw new EmailAlreadyExistsError(email);
+    } else {
+      throw new UnknownError(
+        "An unexpected error occurred during registration.",
+      );
+    }
+  }
+}
+
+export async function googleCompleteRegister({
+  token,
+  username,
+  password,
+}: {
+  token: string;
+  username: string;
+  password: string;
+}): Promise<{
+  email: string;
+  username: string;
+  timestamp: Date;
+}> {
+  const payload = await jwt.verify(token);
+  const parsedPayload = tempRegistrationTokenSchema.safeParse(payload);
+
+  if (!parsedPayload.success) {
+    throw new InvalidTokenError();
+  }
+
+  try {
+    const result = await db
+      .insert(users)
+      .values({
+        email: parsedPayload.data.email,
+        username,
+        passwordHash: hasher.encrypt(password),
+        googleId: parsedPayload.data.googleId,
+      })
+      .returning({
+        email: users.email,
+        username: users.username,
+        timestamp: users.createdAt,
+      });
+
+    return result[0]!;
+  } catch (error) {
+    if (!(error instanceof DrizzleQueryError)) {
+      throw new UnknownError(
+        "An unexpected error occurred during registration.",
+      );
+    }
+
+    if (!(error.cause instanceof postgres.PostgresError)) {
+      throw new UnknownError(
+        "An unexpected error occurred during registration.",
+      );
+    }
+
+    if (
+      error.cause.code === "23505" &&
+      error.cause.constraint_name?.includes("email")
+    ) {
+      throw new EmailAlreadyExistsError(parsedPayload.data.email);
     } else {
       throw new UnknownError(
         "An unexpected error occurred during registration.",
@@ -162,6 +225,26 @@ export async function refreshAccessToken({
   const accessToken = await jwt.sign(payload);
 
   return accessToken;
+}
+
+export async function createGooglePreRegistrationTempToken({
+  googleId,
+  email,
+}: {
+  googleId: string;
+  email: string;
+}): Promise<string> {
+  const token = await jwt.sign(
+    {
+      googleId,
+      email,
+    },
+    {
+      expirationTime: "15m",
+    },
+  );
+
+  return token;
 }
 
 export async function logout({

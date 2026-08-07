@@ -7,10 +7,9 @@ const envSchema = z.object({
   DATABASE_URL: z.url().startsWith("postgresql://"),
   DATABASE_TABLE_PREFIX: z.string().default(""),
   JWT_SECRET: z.string().min(8),
-  ALLOWED_ORIGINS: z
-    .string()
-    .default("http://localhost:3001")
-    .transform((origins) => origins.split(",").map((origin) => origin.trim())),
+  CLIENT_ORIGIN: z.string().default("http://localhost:3001"),
+  GOOGLE_CLIENT_ID: z.string().endsWith(".apps.googleusercontent.com"),
+  GOOGLE_CLIENT_SECRET: z.string(),
 });
 
 export const env = envSchema.parse(Bun.env);

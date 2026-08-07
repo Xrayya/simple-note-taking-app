@@ -22,6 +22,7 @@ export const users = pgTable(USER_TABLE_NAME, {
   username: varchar("username", { length: 100 }).notNull(),
   email: varchar("email", { length: 100 }).notNull().unique(),
   passwordHash: text("password_hash").notNull(),
+  googleId: varchar("google_id", { length: 255 }).unique(),
   ...timestamps,
 });
 

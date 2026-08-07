@@ -5,6 +5,7 @@
     "dev": "bun --hot src/index.ts"
   },
   "dependencies": {
+    "@hono/oauth-providers": "^0.8.6",
     "bcrypt-ts": "^9.0.1",
     "drizzle-orm": "^1.0.0-rc.4",
     "hono": "^4.12.25",

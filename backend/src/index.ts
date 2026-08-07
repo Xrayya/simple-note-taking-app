@@ -11,7 +11,7 @@ import { env, IS_PROD } from "./env";
 console.log("Runtime Check:", {
   IS_PROD,
   NODE_ENV: env.NODE_ENV,
-  ALLOWED_ORIGINS: env.ALLOWED_ORIGINS
+  CLIENT_ORIGIN: env.CLIENT_ORIGIN,
 });
 
 const app = new Hono();
@@ -24,7 +24,7 @@ app.use(
     origin: (origin) => {
       if (!origin) return !IS_PROD ? "*" : null;
 
-      if (env.ALLOWED_ORIGINS.includes(origin)) {
+      if (env.CLIENT_ORIGIN === origin) {
         return origin;
       }
 

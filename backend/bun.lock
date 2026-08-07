@@ -5,6 +5,7 @@
     "": {
       "name": "hono",
       "dependencies": {
+        "@hono/oauth-providers": "^0.8.6",
         "bcrypt-ts": "^9.0.1",
         "drizzle-orm": "^1.0.0-rc.4",
         "hono": "^4.12.25",
@@ -73,6 +74,8 @@
     "@esbuild/win32-ia32": ["@esbuild/win32-ia32@0.25.12", "", { "os": "win32", "cpu": "ia32" }, "sha512-HkqnmmBoCbCwxUKKNPBixiWDGCpQGVsrQfJoVGYLPT41XWF8lHuE5N6WhVia2n4o5QK5M4tYr21827fNhi4byQ=="],
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.12", "", { "os": "win32", "cpu": "x64" }, "sha512-alJC0uCZpTFrSL0CCDjcgleBXPnCrEAhTBILpeAp7M/OFgoqtAetfBzX0xM00MUsVVPpVjlPuMbREqnZCXaTnA=="],
+
+    "@hono/oauth-providers": ["@hono/oauth-providers@0.8.6", "", { "peerDependencies": { "hono": ">=3.0.0" } }, "sha512-Xb75rfb88+7GglWP53d9guII1B4I3u1EFE76fQTGyAuztYTFG6VCTnxBjLxI9W7hkpmKT4qdzAOL5rYGMPQpsQ=="],
 
     "@js-temporal/polyfill": ["@js-temporal/polyfill@0.5.1", "", { "dependencies": { "jsbi": "^4.3.0" } }, "sha512-hloP58zRVCRSpgDxmqCWJNlizAlUgJFqG2ypq79DCvyv9tHjRYMDOcPFjzfl/A1/YxDvRCZz8wvZvmapQnKwFQ=="],
 
