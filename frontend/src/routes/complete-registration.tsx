@@ -15,10 +15,7 @@ import {
 } from "#/components/ui/field.tsx";
 import { Input } from "#/components/ui/input.tsx";
 import { toast } from "#/components/ui/toast.tsx";
-import {
-  googleCompleteRegisterSchema,
-  registerSchema,
-} from "#/schema-validation/auth.ts";
+import { googleCompleteRegisterSchema } from "#/schema-validation/auth.ts";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
