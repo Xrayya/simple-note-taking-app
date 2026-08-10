@@ -1,6 +1,7 @@
 import {
   boolean,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uuid,
@@ -10,6 +11,8 @@ import { env } from "../env";
 
 const USER_TABLE_NAME = `${env.DATABASE_TABLE_PREFIX}-users`;
 const NOTE_TABLE_NAME = `${env.DATABASE_TABLE_PREFIX}-notes`;
+const TAG_TABLE_NAME = `${env.DATABASE_TABLE_PREFIX}-tags`;
+const NOTE_TAGS_TABLE_NAME = `${env.DATABASE_TABLE_PREFIX}-note-tags`;
 const REFRESH_TOKEN_TABLE_NAME = `${env.DATABASE_TABLE_PREFIX}-refresh-token`;
 
 const timestamps = {
@@ -26,6 +29,15 @@ export const users = pgTable(USER_TABLE_NAME, {
   ...timestamps,
 });
 
+export const tags = pgTable(TAG_TABLE_NAME, {
+  id: uuid("id").primaryKey().defaultRandom(),
+  ownerId: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
+  tagName: varchar("tag_name", { length: 100 }).notNull(),
+  ...timestamps,
+});
+
 export const notes = pgTable(NOTE_TABLE_NAME, {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),
@@ -36,6 +48,15 @@ export const notes = pgTable(NOTE_TABLE_NAME, {
     .references(() => users.id, { onDelete: "cascade" }),
   ...timestamps,
 });
+
+export const noteTags = pgTable(
+  NOTE_TAGS_TABLE_NAME,
+  {
+    noteId: uuid("note_id"),
+    tagId: uuid("tag_id"),
+  },
+  (table) => [primaryKey({ columns: [table.noteId, table.tagId] })],
+);
 
 export const refreshTokens = pgTable(REFRESH_TOKEN_TABLE_NAME, {
   id: uuid("id").defaultRandom().primaryKey(),
