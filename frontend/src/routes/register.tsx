@@ -34,7 +34,10 @@ function RouteComponent() {
 
   const register = useMutation({
     mutationFn: async (
-      registerInfo: z.infer<typeof registerSchema>,
+      registerInfo: Pick<
+        z.infer<typeof registerSchema>,
+        "email" | "username" | "password"
+      >,
     ): Promise<{
       email: string;
       username: string;
@@ -79,6 +82,7 @@ function RouteComponent() {
       username: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
     validators: {
       onChange: registerSchema,
@@ -192,6 +196,26 @@ function RouteComponent() {
                             <Field>
                               <FieldLabel htmlFor={field.name}>
                                 Password
+                              </FieldLabel>
+                              <Input
+                                type="password"
+                                id={field.name}
+                                name={field.name}
+                                disabled={isSubmitting}
+                                onBlur={field.handleBlur}
+                                onChange={(e) => {
+                                  field.handleChange(e.target.value);
+                                }}
+                                required
+                              />
+                            </Field>
+                          )}
+                        </form.Field>
+                        <form.Field name="confirmPassword">
+                          {(field) => (
+                            <Field>
+                              <FieldLabel htmlFor={field.name}>
+                                Confirm Password
                               </FieldLabel>
                               <Input
                                 type="password"
