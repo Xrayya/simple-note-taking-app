@@ -55,8 +55,7 @@ export function NavUser({
         );
       }
 
-      const payload = await response.json();
-      return payload.validLogin;
+      return;
     },
     onSuccess: () => {
       toast.add({
