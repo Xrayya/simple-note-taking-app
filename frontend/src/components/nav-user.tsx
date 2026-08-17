@@ -15,15 +15,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  BadgeCheckIcon,
-  BellIcon,
-  ChevronsUpDownIcon,
-  CreditCardIcon,
-  LogOutIcon,
-  SparklesIcon,
-} from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { BadgeCheckIcon, ChevronsUpDownIcon, LogOutIcon } from "lucide-react";
+import { toast } from "./ui/toast";
+import { accessToken } from "#/models/accessToken.ts";
+import { useNavigate } from "@tanstack/react-router";
+import { Route as loginRoute } from "@/routes/login";
 
 export function NavUser({
   user,
@@ -34,10 +31,53 @@ export function NavUser({
     avatar: string;
   };
 }) {
+  const navigate = useNavigate();
+
   const { isMobile } = useSidebar();
   const queryClient = useQueryClient();
 
   const userData = queryClient.getQueryData(authMeOption.queryKey);
+
+  const logout = useMutation({
+    mutationFn: async (): Promise<void> => {
+      const url = new URL(`/api/auth/logout`, window.location.origin);
+
+      const response = await fetch(url, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const payload = await response.json();
+
+        throw new Error(
+          payload?.error?.message || "An error occurred while fetching data",
+          { cause: payload?.error?.name },
+        );
+      }
+
+      const payload = await response.json();
+      return payload.validLogin;
+    },
+    onSuccess: () => {
+      toast.add({
+        type: "success",
+        description: "Logout succesfully",
+      });
+
+      accessToken.set(undefined);
+
+      setTimeout(() => {
+        navigate({
+          to: loginRoute.to,
+        });
+      }, 500);
+    },
+  });
+
+  const handleLogout = () => {
+    logout.mutate();
+  };
 
   return (
     <SidebarMenu>
@@ -94,27 +134,12 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <SparklesIcon />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
                 <BadgeCheckIcon />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon />
-                Notifications
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={handleLogout}>
               <LogOutIcon />
               Log out
             </DropdownMenuItem>
