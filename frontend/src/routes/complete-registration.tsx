@@ -8,7 +8,6 @@ import {
 } from "#/components/ui/card.tsx";
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSet,
@@ -18,7 +17,7 @@ import { toast } from "#/components/ui/toast.tsx";
 import { googleCompleteRegisterSchema } from "#/schema-validation/auth.ts";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { GalleryVerticalEnd, LoaderCircle } from "lucide-react";
 import type { z } from "zod";
 import { Route as loginRoute } from "./login.tsx";
@@ -32,7 +31,10 @@ function RouteComponent() {
 
   const register = useMutation({
     mutationFn: async (
-      registerInfo: z.infer<typeof googleCompleteRegisterSchema>,
+      registerInfo: Pick<
+        z.infer<typeof googleCompleteRegisterSchema>,
+        "username" | "password"
+      >,
     ): Promise<{
       email: string;
       username: string;
@@ -79,6 +81,7 @@ function RouteComponent() {
     defaultValues: {
       username: "",
       password: "",
+      confirmPassword: "",
     },
     validators: {
       onChange: googleCompleteRegisterSchema,
@@ -158,6 +161,26 @@ function RouteComponent() {
                             </Field>
                           )}
                         </form.Field>
+                        <form.Field name="confirmPassword">
+                          {(field) => (
+                            <Field>
+                              <FieldLabel htmlFor={field.name}>
+                                Confirm Password
+                              </FieldLabel>
+                              <Input
+                                type="password"
+                                id={field.name}
+                                name={field.name}
+                                disabled={isSubmitting}
+                                onBlur={field.handleBlur}
+                                onChange={(e) => {
+                                  field.handleChange(e.target.value);
+                                }}
+                                required
+                              />
+                            </Field>
+                          )}
+                        </form.Field>
                         <Field>
                           <Button type="submit" disabled={!canSubmit}>
                             {isSubmitting ? (
@@ -165,10 +188,6 @@ function RouteComponent() {
                             ) : null}
                             Register
                           </Button>
-                          <FieldDescription className="text-center">
-                            <span>Already have an account? </span>
-                            <Link to={loginRoute.to}>Login</Link>
-                          </FieldDescription>
                         </Field>
                       </FieldGroup>
                     </FieldSet>
