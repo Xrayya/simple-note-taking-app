@@ -15,17 +15,17 @@ import {
   FieldSet,
 } from "#/components/ui/field.tsx";
 import { Input } from "#/components/ui/input.tsx";
+import { toast } from "#/components/ui/toast.tsx";
+import { env } from "#/lib/env.ts";
+import { accessToken } from "#/models/accessToken.ts";
+import { loginSchema } from "#/schema-validation/auth.ts";
 import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { GalleryVerticalEnd, LoaderCircle } from "lucide-react";
-import { Route as registerRoute } from "./register.tsx";
-import { Route as homeRoute } from "./_auth/index.tsx";
-import { useMutation } from "@tanstack/react-query";
-import { loginSchema } from "#/schema-validation/auth.ts";
 import type { z } from "zod";
-import { toast } from "#/components/ui/toast.tsx";
-import { accessToken } from "#/models/accessToken.ts";
-import { env } from "#/lib/env.ts";
+import { Route as homeRoute } from "./_auth/index.tsx";
+import { Route as registerRoute } from "./register.tsx";
 
 export const Route = createFileRoute("/login")({
   component: RouteComponent,
@@ -93,8 +93,8 @@ function RouteComponent() {
   });
 
   const handleGoogleLoginClick = () => {
-    window.location.href = `${env.VITE_BACKEND_ENDPOINT}${env.VITE_BACKEND_ROUTE_PREFIX}/auth/google`
-  }
+    window.location.href = `${env.VITE_BACKEND_ENDPOINT}${env.VITE_BACKEND_ROUTE_PREFIX}/auth/google`;
+  };
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">

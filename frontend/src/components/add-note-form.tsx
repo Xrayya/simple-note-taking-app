@@ -1,3 +1,4 @@
+import { authFetch } from "#/lib/utils.ts";
 import type { Note } from "#/models/notes.ts";
 import { addNoteSchema } from "#/schema-validation/notes.ts";
 import { useForm } from "@tanstack/react-form";
@@ -14,7 +15,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { authFetch } from "#/lib/utils.ts";
 import { toast } from "./ui/toast";
 
 type Props = ComponentProps<"div"> & {

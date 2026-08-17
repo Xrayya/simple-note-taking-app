@@ -1,3 +1,4 @@
+import { useDebouce } from "#/hooks/use-debounce.ts";
 import { LoaderCircle, SearchIcon, X } from "lucide-react";
 import { useEffect, useState, type ComponentProps } from "react";
 import { Field } from "./ui/field";
@@ -7,7 +8,6 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "./ui/input-group";
-import { useDebouce } from "#/hooks/use-debounce.ts";
 
 type Props = ComponentProps<typeof Field> & {
   debounce?: number;

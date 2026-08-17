@@ -1,5 +1,3 @@
-import { Moon, Sun } from "lucide-react";
-
 import { useTheme } from "#/hooks/use-theme.ts";
 import {
   DropdownMenu,
@@ -7,6 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Moon, Sun } from "lucide-react";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 
 export function ThemeToggle() {

@@ -1,9 +1,9 @@
 import { authMeOption } from "#/lib/api.ts";
+import { accessToken } from "#/models/accessToken.ts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -15,12 +15,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BadgeCheckIcon, ChevronsUpDownIcon, LogOutIcon } from "lucide-react";
-import { toast } from "./ui/toast";
-import { accessToken } from "#/models/accessToken.ts";
-import { useNavigate } from "@tanstack/react-router";
 import { Route as loginRoute } from "@/routes/login";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
+import { ChevronsUpDownIcon, LogOutIcon } from "lucide-react";
+import { toast } from "./ui/toast";
 
 export function NavUser({
   user,

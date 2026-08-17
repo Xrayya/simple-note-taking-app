@@ -16,6 +16,7 @@ import {
 } from "#/components/ui/field.tsx";
 import { Input } from "#/components/ui/input.tsx";
 import { toast } from "#/components/ui/toast.tsx";
+import { env } from "#/lib/env.ts";
 import { registerSchema } from "#/schema-validation/auth.ts";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
@@ -23,7 +24,6 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { GalleryVerticalEnd, LoaderCircle } from "lucide-react";
 import type { z } from "zod";
 import { Route as loginRoute } from "./login.tsx";
-import { env } from "#/lib/env.ts";
 
 export const Route = createFileRoute("/register")({
   component: RouteComponent,
