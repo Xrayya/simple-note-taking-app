@@ -52,8 +52,8 @@ export const notes = pgTable(NOTE_TABLE_NAME, {
 export const noteTags = pgTable(
   NOTE_TAGS_TABLE_NAME,
   {
-    noteId: uuid("note_id"),
-    tagId: uuid("tag_id"),
+    noteId: uuid("note_id").references(() => notes.id),
+    tagId: uuid("tag_id").references(() => tags.id),
   },
   (table) => [primaryKey({ columns: [table.noteId, table.tagId] })],
 );
