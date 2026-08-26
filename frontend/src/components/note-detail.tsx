@@ -170,6 +170,7 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
 
   return (
     <form
+      id="note-detail-form"
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -221,7 +222,12 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
               </form.Field>
             </div>
             <DrawerFooter>
-              <Button type="submit" disabled={!canSubmit} className="h-8.5">
+              <Button
+                type="submit"
+                form="note-detail-form"
+                disabled={!canSubmit}
+                className="h-8.5"
+              >
                 {isSubmitting ? (
                   <LoaderCircle className="animate-spin" />
                 ) : null}
