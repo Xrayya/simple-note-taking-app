@@ -104,6 +104,12 @@ describe("Auth", () => {
     });
 
     expect(response.status).toBe(200);
+
+    const data: any = await response.json();
+
+    expect(data.authInfo).toBeObject();
+    expect(data.authInfo.username).toBe(mockUser.username);
+    expect(data.authInfo.email).toBe(mockUser.email);
   });
 
   test("access token should be invalid past 4s after login", async () => {
@@ -135,7 +141,7 @@ describe("Auth", () => {
     accessToken = data.accessToken;
   });
 
-  test("access token should be valid within 4s after refresh", async () => {
+  test("new access token should be valid within 4s after refresh", async () => {
     const response = await fetch(`${baseUrl}/me`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -143,9 +149,15 @@ describe("Auth", () => {
     });
 
     expect(response.status).toBe(200);
+
+    const data: any = await response.json();
+
+    expect(data.authInfo).toBeObject();
+    expect(data.authInfo.username).toBe(mockUser.username);
+    expect(data.authInfo.email).toBe(mockUser.email);
   });
 
-  test("access token should be invalid past 4s after refresh", async () => {
+  test("new access token should be invalid past 4s after refresh", async () => {
     await new Promise((resolve) => setTimeout(resolve, 4010));
 
     const response = await fetch(`${baseUrl}/me`, {
