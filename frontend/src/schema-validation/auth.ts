@@ -36,7 +36,7 @@ export const googleCompleteRegisterSchema = z
       }, "Password must contain at least one uppercase letter, one lowercase letter, and one number"),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.password !== data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     error: "Password does not match",
     path: ["confirmPassword"],
   });
