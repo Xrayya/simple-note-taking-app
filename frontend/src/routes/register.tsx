@@ -61,7 +61,7 @@ function RouteComponent() {
       }
 
       const payload = await response.json();
-      return payload.newUser;
+      return payload.account;
     },
     onSuccess: () => {
       toast.add({
