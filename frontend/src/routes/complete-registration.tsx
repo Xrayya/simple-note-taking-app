@@ -86,8 +86,8 @@ function RouteComponent() {
     validators: {
       onChange: googleCompleteRegisterSchema,
     },
-    onSubmit: ({ value }) => {
-      register.mutate({ ...value });
+    onSubmit: async ({ value }) => {
+      await register.mutateAsync({ ...value });
     },
   });
 

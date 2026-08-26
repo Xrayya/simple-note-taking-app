@@ -75,8 +75,8 @@ export function AddNoteForm({
     validators: {
       onChange: addNoteSchema,
     },
-    onSubmit: ({ value }) => {
-      addNote.mutate({ ...value });
+    onSubmit: async ({ value }) => {
+      await addNote.mutateAsync({ ...value });
       form.reset();
     },
   });

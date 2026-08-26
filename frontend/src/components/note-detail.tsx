@@ -102,8 +102,8 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
     validators: {
       onChange: updateNoteContentSchema,
     },
-    onSubmit: ({ value }) => {
-      updateNoteContent.mutate({ ...value });
+    onSubmit: async ({ value }) => {
+      await updateNoteContent.mutateAsync({ ...value });
     },
   });
 

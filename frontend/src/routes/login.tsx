@@ -87,8 +87,8 @@ function RouteComponent() {
     validators: {
       onChange: loginSchema,
     },
-    onSubmit: ({ value }) => {
-      login.mutate({ ...value });
+    onSubmit: async ({ value }) => {
+      await login.mutateAsync({ ...value });
     },
   });
 

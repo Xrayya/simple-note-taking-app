@@ -87,8 +87,8 @@ function RouteComponent() {
     validators: {
       onChange: registerSchema,
     },
-    onSubmit: ({ value }) => {
-      register.mutate({ ...value });
+    onSubmit: async ({ value }) => {
+      await register.mutateAsync({ ...value });
     },
   });
 
