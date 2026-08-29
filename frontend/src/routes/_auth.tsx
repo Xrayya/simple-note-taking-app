@@ -21,16 +21,10 @@ import { cn } from "#/lib/utils.ts";
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import { useState } from "react";
 import { Route as loginRoute } from "./login.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { LoaderCircle } from "lucide-react";
 
 export const Route = createFileRoute("/_auth")({
-  beforeLoad: async ({ context }) => {
-    try {
-      const data = await context.queryClient.fetchQuery(authMeOption);
-      return { user: data };
-    } catch {
-      return { user: null };
-    }
-  },
   component: RouteComponent,
 });
 
@@ -94,9 +88,18 @@ function RouteLayout() {
 }
 
 function RouteComponent() {
-  const { user } = Route.useRouteContext();
+  const { data, isLoading, isError } = useQuery(authMeOption);
 
-  if (!user) {
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-muted">
+        <LoaderCircle className="animate-spin" />
+        <span>Authenticating...</span>
+      </div>
+    );
+  }
+
+  if (!data || isError) {
     return <Navigate to={loginRoute.to} />;
   }
 

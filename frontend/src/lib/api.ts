@@ -81,6 +81,7 @@ export function noteListOption(filter?: NoteFilter, initialData?: Note[]) {
 
 export const authMeOption = queryOptions({
   queryKey: ["auth"] as const,
+  retry: false,
   queryFn: async (): Promise<{ username: string; email: string }> => {
     const response = await authFetch(
       new URL("/api/auth/me", window.location.href),

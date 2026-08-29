@@ -15,9 +15,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Route as loginRoute } from "@/routes/login";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { ChevronsUpDownIcon, LogOutIcon } from "lucide-react";
 import { toast } from "./ui/toast";
 
@@ -30,8 +32,6 @@ export function NavUser({
     avatar: string;
   };
 }) {
-  const navigate = useNavigate();
-
   const { isMobile } = useSidebar();
   const queryClient = useQueryClient();
 
@@ -57,7 +57,7 @@ export function NavUser({
 
       return;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.add({
         type: "success",
         description: "Logout succesfully",
@@ -65,11 +65,11 @@ export function NavUser({
 
       accessToken.set(undefined);
 
-      setTimeout(() => {
-        navigate({
-          to: loginRoute.to,
-        });
-      }, 500);
+      await queryClient.invalidateQueries(
+        queryOptions({
+          queryKey: ["auth"],
+        }),
+      );
     },
   });
 
