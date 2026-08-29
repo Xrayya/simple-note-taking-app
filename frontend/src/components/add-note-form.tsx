@@ -16,6 +16,7 @@ import { Field, FieldGroup, FieldSet } from "./ui/field";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { toast } from "./ui/toast";
+import { noteListOption } from "#/lib/api.ts";
 
 type Props = ComponentProps<"div"> & {
   onCancel?: () => void;
@@ -53,13 +54,13 @@ export function AddNoteForm({
       const payload = await response.json();
       return payload.newNote;
     },
-    onSuccess: (_data, { title }) => {
+    onSuccess: async (_data, { title }) => {
       toast.add({
         type: "success",
         description: `Succesfully create note '${title}'`,
       });
 
-      queryClient.invalidateQueries(
+      await queryClient.invalidateQueries(
         queryOptions({
           queryKey: ["notes"],
         }),

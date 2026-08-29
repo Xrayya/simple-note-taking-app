@@ -35,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { toast } from "./ui/toast";
+import { noteListOption } from "#/lib/api.ts";
 
 type Props = ComponentProps<"div"> & Note;
 
@@ -72,13 +73,13 @@ export function NoteCard({
       const payload = await response.json();
       return payload.updatedNote;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.add({
         type: "success",
         description: `Succesfully ${isArchived ? "unarchiving" : "archiving"} note '${title}'`,
       });
 
-      queryClient.invalidateQueries(
+      await queryClient.invalidateQueries(
         queryOptions({
           queryKey: ["notes"],
         }),
@@ -110,13 +111,13 @@ export function NoteCard({
       const payload = await response.json();
       return payload.deletedNote;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.add({
         type: "success",
         description: `Succesfully delete note '${title}'`,
       });
 
-      queryClient.invalidateQueries(
+      await queryClient.invalidateQueries(
         queryOptions({
           queryKey: ["notes"],
         }),

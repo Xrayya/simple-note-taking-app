@@ -80,13 +80,13 @@ function NoteDetailDrawerContent({ noteId }: NoteDetailDrawerPayload) {
       const payload = await response.json();
       return payload.updatedNote;
     },
-    onSuccess: (_data, { title }) => {
+    onSuccess: async (_data, { title }) => {
       toast.add({
         type: "success",
         description: `Succesfully update note '${title}'`,
       });
 
-      queryClient.invalidateQueries(
+      await queryClient.invalidateQueries(
         queryOptions({
           queryKey: ["notes"],
         }),
