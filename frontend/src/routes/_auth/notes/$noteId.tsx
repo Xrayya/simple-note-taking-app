@@ -1,7 +1,5 @@
 import { Button } from "#/components/ui/button.tsx";
 import { Field, FieldGroup, FieldSet } from "#/components/ui/field.tsx";
-import { Input } from "#/components/ui/input.tsx";
-import { Textarea } from "#/components/ui/textarea.tsx";
 import { toast } from "#/components/ui/toast.tsx";
 import { noteListOption } from "#/lib/api.ts";
 import { authFetch } from "#/lib/utils.ts";
@@ -11,12 +9,13 @@ import {
   updateNoteContentSchema,
 } from "#/schema-validation/notes.ts";
 import { useForm } from "@tanstack/react-form";
+import { queryOptions, useMutation } from "@tanstack/react-query";
 import {
-  queryOptions,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+  createFileRoute,
+  Navigate,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { LoaderCircle } from "lucide-react";
 import type { z } from "zod";
 import { Route as homeRoute } from "../index";
@@ -49,12 +48,13 @@ export const Route = createFileRoute("/_auth/notes/$noteId")({
 });
 
 function RouteComponent() {
+  const router = useRouter();
   const data = Route.useLoaderData();
   const noteId = Route.useParams().noteId;
 
-  const queryClient = useQueryClient();
+  const naviagate = useNavigate();
 
-  const addNote = useMutation({
+  const updateNote = useMutation({
     mutationFn: async (
       updatedNoteContent: z.infer<typeof updateNoteContentSchema>,
     ): Promise<Note> => {
@@ -78,17 +78,19 @@ function RouteComponent() {
       const payload = await response.json();
       return payload.updatedNote;
     },
-    onSuccess: async (_data, { title }) => {
+    onSuccess: async (_data, { title }, _result, context) => {
       toast.add({
         type: "success",
         description: `Succesfully update note '${title}'`,
       });
 
-      await queryClient.invalidateQueries(
+      await context.client.invalidateQueries(
         queryOptions({
           queryKey: ["notes", { id: noteId }],
         }),
       );
+
+      router.invalidate();
     },
   });
 
@@ -101,11 +103,20 @@ function RouteComponent() {
       onChange: addNoteSchema,
     },
     onSubmit: async ({ value }) => {
-      // await addNote.mutateAsync({ ...value });
+      await updateNote.mutateAsync({ ...value });
       form.reset();
     },
   });
 
+  const handleBodyInputKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    if (e.key === "Tab") {
+      e.preventDefault();
+
+      form.setFieldValue("body", form.getFieldValue("body") + "\t");
+    }
+  };
 
   if (!data) {
     toast.add({
@@ -132,7 +143,8 @@ function RouteComponent() {
               <form.Field name="title">
                 {(field) => (
                   <Field>
-                    <Input
+                    <input
+                      className="text-4xl"
                       type="text"
                       name={field.name}
                       value={field.state.value}
@@ -149,7 +161,8 @@ function RouteComponent() {
               <form.Field name="body">
                 {(field) => (
                   <Field>
-                    <Textarea
+                    <textarea
+                      className="field-sizing-content resize-none"
                       name={field.name}
                       value={field.state.value}
                       disabled={isSubmitting}
@@ -157,8 +170,9 @@ function RouteComponent() {
                       onChange={(e) => {
                         field.handleChange(e.target.value);
                       }}
+                      onKeyDown={handleBodyInputKeyDown}
                       placeholder="Your feedback helps us improve..."
-                      rows={4}
+                    // rows={4}
                     />
                   </Field>
                 )}
@@ -168,7 +182,7 @@ function RouteComponent() {
                   {isSubmitting ? (
                     <LoaderCircle className="animate-spin" />
                   ) : null}
-                  Add Note
+                  Update Note
                 </Button>
                 <Button
                   variant="destructive"
@@ -178,6 +192,8 @@ function RouteComponent() {
                     e.preventDefault();
                     e.stopPropagation();
                     form.reset();
+
+                    naviagate({ to: homeRoute.to });
                   }}
                 >
                   Cancel
