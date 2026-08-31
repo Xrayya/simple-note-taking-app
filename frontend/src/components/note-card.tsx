@@ -23,10 +23,6 @@ import {
 } from "lucide-react";
 import type { ComponentProps } from "react";
 import {
-  NoteDetailDrawerTrigger,
-  type NoteDetailDrawerPayload,
-} from "./note-detail";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -35,7 +31,8 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { toast } from "./ui/toast";
-import { noteListOption } from "#/lib/api.ts";
+import { useNavigate } from "@tanstack/react-router";
+import { Route as noteDetailRoute } from "#/routes/_auth/notes/$noteId.tsx";
 
 type Props = ComponentProps<"div"> & Note;
 
@@ -49,6 +46,7 @@ export function NoteCard({
   className,
   ...restProps
 }: Props) {
+  const navgate = useNavigate();
   const queryClient = useQueryClient();
 
   const archiveUnarchiveNote = useMutation({
@@ -126,101 +124,94 @@ export function NoteCard({
   });
 
   return (
-    <NoteDetailDrawerTrigger
-      nativeButton={false}
-      payload={{ noteId: id } as NoteDetailDrawerPayload}
-      render={
-        <Card
-          className={cn(
-            "mx-auto w-full transition-all scale-100 hover:scale-105",
-            className,
-          )}
-          {...restProps}
-        >
-          <CardHeader>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>
-              <>
-                {"created at: "}
-                {createdAt.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </>
-              {updatedAt ? (
-                <>
-                  {", last updated: "}
-                  {updatedAt?.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </>
-              ) : null}
-            </CardDescription>
-            <CardAction>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon-xs"
-                    className="rounded-full"
-                  >
-                    <EllipsisVertical />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-fit" align="start">
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>Action</DropdownMenuLabel>
-                    <DropdownMenuItem
-                      disabled={archiveUnarchiveNote.isPending}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        archiveUnarchiveNote.mutate();
-                      }}
-                    >
-                      {isArchived ? (
-                        <>
-                          <Upload />
-                          Unarchived
-                        </>
-                      ) : (
-                        <>
-                          <Download />
-                          Archive
-                        </>
-                      )}
-                      {archiveUnarchiveNote.isPending ? (
-                        <LoaderCircle className="ml-auto animate-spin" />
-                      ) : null}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      variant="destructive"
-                      disabled={deleteNote.isPending}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        deleteNote.mutate();
-                      }}
-                    >
-                      <TrashIcon />
-                      Delete
-                      {deleteNote.isPending ? (
-                        <LoaderCircle className="ml-auto animate-spin" />
-                      ) : null}
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <p>{body}</p>
-          </CardContent>
-        </Card>
-      }
-    />
+    <Card
+      className={cn(
+        "mx-auto w-full transition-all scale-100 hover:scale-105 cursor-pointer",
+        className,
+      )}
+      onClick={() => {
+        navgate({ to: noteDetailRoute.to, params: { noteId: id } });
+      }}
+      {...restProps}
+    >
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>
+          <>
+            {"created at: "}
+            {createdAt.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </>
+          {updatedAt ? (
+            <>
+              {", last updated: "}
+              {updatedAt?.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </>
+          ) : null}
+        </CardDescription>
+        <CardAction>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon-xs" className="rounded-full">
+                <EllipsisVertical />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-fit" align="start">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Action</DropdownMenuLabel>
+                <DropdownMenuItem
+                  disabled={archiveUnarchiveNote.isPending}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    archiveUnarchiveNote.mutate();
+                  }}
+                >
+                  {isArchived ? (
+                    <>
+                      <Upload />
+                      Unarchived
+                    </>
+                  ) : (
+                    <>
+                      <Download />
+                      Archive
+                    </>
+                  )}
+                  {archiveUnarchiveNote.isPending ? (
+                    <LoaderCircle className="ml-auto animate-spin" />
+                  ) : null}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  variant="destructive"
+                  disabled={deleteNote.isPending}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    deleteNote.mutate();
+                  }}
+                >
+                  <TrashIcon />
+                  Delete
+                  {deleteNote.isPending ? (
+                    <LoaderCircle className="ml-auto animate-spin" />
+                  ) : null}
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <p>{body}</p>
+      </CardContent>
+    </Card>
   );
 }

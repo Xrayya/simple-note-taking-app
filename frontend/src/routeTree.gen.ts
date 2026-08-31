@@ -16,6 +16,7 @@ import { Route as CompleteRegistrationRouteImport } from './routes/complete-regi
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
 import { Route as AuthArchiveRouteImport } from './routes/_auth/archive'
+import { Route as AuthNotesNoteIdRouteImport } from './routes/_auth/notes/$noteId'
 
 const SuccessfulLoginRoute = SuccessfulLoginRouteImport.update({
   id: '/successful-login',
@@ -51,6 +52,11 @@ const AuthArchiveRoute = AuthArchiveRouteImport.update({
   path: '/archive',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthNotesNoteIdRoute = AuthNotesNoteIdRouteImport.update({
+  id: '/notes/$noteId',
+  path: '/notes/$noteId',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/successful-login': typeof SuccessfulLoginRoute
   '/archive': typeof AuthArchiveRoute
+  '/notes/$noteId': typeof AuthNotesNoteIdRoute
 }
 export interface FileRoutesByTo {
   '/complete-registration': typeof CompleteRegistrationRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/successful-login': typeof SuccessfulLoginRoute
   '/archive': typeof AuthArchiveRoute
   '/': typeof AuthIndexRoute
+  '/notes/$noteId': typeof AuthNotesNoteIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/successful-login': typeof SuccessfulLoginRoute
   '/_auth/archive': typeof AuthArchiveRoute
   '/_auth/': typeof AuthIndexRoute
+  '/_auth/notes/$noteId': typeof AuthNotesNoteIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/successful-login'
     | '/archive'
+    | '/notes/$noteId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/complete-registration'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
     | '/successful-login'
     | '/archive'
     | '/'
+    | '/notes/$noteId'
   id:
     | '__root__'
     | '/_auth'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '/successful-login'
     | '/_auth/archive'
     | '/_auth/'
+    | '/_auth/notes/$noteId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -165,17 +177,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthArchiveRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/notes/$noteId': {
+      id: '/_auth/notes/$noteId'
+      path: '/notes/$noteId'
+      fullPath: '/notes/$noteId'
+      preLoaderRoute: typeof AuthNotesNoteIdRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
 interface AuthRouteChildren {
   AuthArchiveRoute: typeof AuthArchiveRoute
   AuthIndexRoute: typeof AuthIndexRoute
+  AuthNotesNoteIdRoute: typeof AuthNotesNoteIdRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthArchiveRoute: AuthArchiveRoute,
   AuthIndexRoute: AuthIndexRoute,
+  AuthNotesNoteIdRoute: AuthNotesNoteIdRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
